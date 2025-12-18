@@ -1,4 +1,4 @@
-const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRFhDL9AhyZ6W74MM7U9kl7XTmeqU7lcRuq1rUNtYQYM5Ao8bIEM-t-edauC6ukFnz_mExHC6QtnHT9/pub?gid=282799328&single=true&output=csv";
+const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPhg2PgOPJ3HrUxHvn-nQ91dy6AGLKEtGxAIe93--ijYRe-eUitKliTPDSn9l1bw/pub?gid=1199931655&single=true&output=csv";
 
 let dados = [];
 let dadosVendedora = [];
@@ -226,3 +226,4 @@ function renderizar(lista) {
 );
 
 atualizarBotaoLimpar();
+

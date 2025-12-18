@@ -1,6 +1,6 @@
 const url =
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd3LXhlCk1HrD84J-EBE7IQpWmUSzT8BS4ilEk0d98jgiR2_UMU5Q74AAFHDNH7vCJmecvf2OXzB_5/pub?output=csv&nocache=" +
-    Date.now();
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd3LXhlCk1HrD84J-EBE7IQpWmUSzT8BS4ilEk0d98jgiR2_UMU5Q74AAFHDNH7vCJmecvf2OXzB_5/pub?output=csv&nocache=" +
+  Date.now();
 
 let dados = [];
 let dadosVendedora = [];
@@ -228,6 +228,7 @@ function renderizar(lista) {
 );
 
 atualizarBotaoLimpar();
+
 
 
 

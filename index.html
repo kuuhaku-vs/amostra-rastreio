@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rastreamento de Amostras</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<div id="modalLimpar" class="modal">
+    <div class="modal-box">
+        <p>Deseja limpar todos os filtros?</p>
+        <div class="modal-botoes">
+            <button id="confirmarLimpar">Sim</button>
+            <button id="cancelarLimpar">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<body>
+    <header class="topo">
+        <img src="4k BRANCO.png" class="logo">
+        <h1>Rastreamento de Amostras</h1>
+    </header>
+    <div id="boasVindas" class="boas-vindas"></div>
+
+
+    <main class="container">
+
+<div class="box-busca compacto">
+    <input id="codigo" placeholder="Código da vendedora">
+
+    <div class="linha-filtros compacto">
+        <input id="filtroNota" placeholder="Nota Fiscal" disabled>
+        <input id="filtroPedido" placeholder="Pedido" disabled>
+    </div>
+
+    <div class="linha-botoes">
+        <button id="pesquisar">
+            <span class="icon">🔍</span>
+            <span class="texto-btn">Pesquisar</span>
+        </button>
+
+        <button id="limpar" class="btn-limpar" disabled>
+            <span class="icone-limpar">🧹</span>
+            Limpar
+        </button>
+    </div>
+</div>
+
+<div id="contador" class="contador compacto"></div>
+
+
+        <!-- CONTADOR LOGO ABAIXO DA BUSCA -->
+        <div id="contador" class="contador"></div>
+
+        <!-- RESULTADOS -->
+        <div id="resultado"></div>
+
+    </main>
+
+    <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="teste01.js"></script>
+</body>
+
+</html>

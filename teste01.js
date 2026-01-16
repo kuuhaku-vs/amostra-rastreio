@@ -178,6 +178,7 @@ function renderizar(lista) {
     lista.forEach(l => {
         resultado.innerHTML += `
         <div class="card">
+            <strong>Envio:</strong> ${l[5]}<br>
             <strong>Nota Fiscal:</strong> ${destacar(l[0], nota.value)}<br>
             <strong>Pedido:</strong> ${destacar(l[13], pedido.value)}<br>
             <strong>Rastreio:</strong> ${l[1]}<br>
@@ -205,3 +206,4 @@ function renderizar(lista) {
 );
 
 atualizarBotaoLimpar();
+

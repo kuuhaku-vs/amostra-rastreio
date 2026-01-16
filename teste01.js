@@ -1,5 +1,5 @@
 const url =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSd3LXhlCk1HrD84J-EBE7IQpWmUSzT8BS4ilEk0d98jgiR2_UMU5Q74AAFHDNH7vCJmecvf2OXzB_5/pub?output=csv&nocache=" +
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7og0_9fNfXHoINFiE-s75rCPc-RIqAFLwcl8dQqMvEKXimWrMfgQz30QxPKul8_1Cf8RB4YSoizJy/pub?gid=0&single=true&output=csv&nocache=" +
   Date.now();
 
 let dados = [];

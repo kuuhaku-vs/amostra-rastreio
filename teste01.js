@@ -178,15 +178,15 @@ function renderizar(lista) {
     lista.forEach(l => {
         resultado.innerHTML += `
         <div class="card">
-            <strong>Envio:</strong> ${l[5]}<br>
             <strong>Nota Fiscal:</strong> ${destacar(l[0], nota.value)}<br>
             <strong>Pedido:</strong> ${destacar(l[13], pedido.value)}<br>
             <strong>Rastreio:</strong> ${l[1]}<br>
+            <strong>Envio:</strong> ${l[5]}<br>
             <strong>Destinatário:</strong> ${l[7]}<br>
             <strong>Cidade/UF:</strong> ${l[10]} - ${l[11]}<br>
             <strong>Situação:</strong> ${l[20]}<br>
             <strong>Prazo:</strong> ${l[12]}<br>
-            <strong>Vendedora:</strong> ${l[19]}
+            <strong>Vendedor:</strong> ${l[19]}
         </div>
         `;
     });
@@ -206,4 +206,5 @@ function renderizar(lista) {
 );
 
 atualizarBotaoLimpar();
+
 

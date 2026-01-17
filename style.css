@@ -1,3 +1,4 @@
+/* ================= RESET / BASE ================= */
 * {
   box-sizing: border-box;
   font-family: Arial, sans-serif;
@@ -7,9 +8,10 @@ body {
   margin: 0;
   min-height: 100vh;
   background: linear-gradient(180deg, #0b3ccf, #4d7fe2);
+  overflow-x: hidden;
 }
 
-/* TOPO */
+/* ================= TOPO ================= */
 .topo {
   display: flex;
   align-items: center;
@@ -25,7 +27,7 @@ body {
   width: 60px;
 }
 
-/* CONTEÚDO */
+/* ================= CONTEÚDO ================= */
 .container {
   display: flex;
   flex-direction: column;
@@ -33,17 +35,46 @@ body {
   padding: 40px 20px;
 }
 
-/* BOX BUSCA */
+/* ================= BOAS-VINDAS ================= */
+.boas-vindas {
+  margin-top: 6px;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.boas-vindas.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.boas-vindas strong {
+  color: #ffeb3b;
+}
+
+/* ================= LAYOUT TOPO ================= */
+.topo-layout {
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: 420px 1fr 1fr;
+  gap: 25px;
+  align-items: stretch;
+}
+
+/* ================= BUSCA ================= */
 .box-busca {
   background: rgba(255, 255, 255, 0.15);
-  padding: 25px;
+  padding: 18px;
   border-radius: 16px;
-  width: 100%;
-  max-width: 480px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, .25);
+  box-shadow: 0 10px 25px rgba(0,0,0,.25);
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
 }
 
 .box-busca input {
@@ -54,20 +85,14 @@ body {
   font-size: 14px;
 }
 
-.linha-filtros {
+/* ================= BOTÕES ================= */
+.linha-botoes {
   display: flex;
-  justify-content: center;
-  /* CENTRALIZA */
-  gap: 12px;
+  gap: 8px;
 }
 
-.linha-filtros input {
-  width: 45%;
-  /* tamanho equilibrado */
-  text-align: center;
-}
-
-.box-busca button {
+.linha-botoes button {
+  flex: 1;
   padding: 12px;
   border-radius: 10px;
   border: none;
@@ -76,140 +101,10 @@ body {
   background: white;
 }
 
-.box-busca button:hover {
+.linha-botoes button:hover:not(:disabled) {
   background: #eaeaea;
 }
 
-/* RESULTADOS */
-#resultado {
-  margin-top: 30px;
-  width: 100%;
-  max-width: 700px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.card {
-  background: white;
-  border-radius: 14px;
-  padding: 15px 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, .2);
-  animation: aparecer .3s ease;
-}
-
-.card strong {
-  color: #2038a8;
-}
-
-@keyframes aparecer {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* DESTAQUE DE TEXTO */
-.highlight {
-  background: yellow;
-  font-weight: bold;
-}
-/* CARD NORMAL */
-.card {
-  background: white;
-  border-radius: 14px;
-  padding: 15px 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, .2);
-  transition: background 0.3s, box-shadow 0.3s;
-}
-
-/* CARD DESTACADO AO FILTRAR */
-.card.filtrado {
-  background: #e8f0ff;
-  /* azul claro */
-  box-shadow: 0 10px 25px rgba(32, 56, 168, 0.4);
-}
-
-/* TEXTO DESTACADO */
-.highlight {
-  background: yellow;
-  font-weight: bold;
-  padding: 0 2px;
-  border-radius: 3px;
-}
-/* animação ao filtrar */
-.card {
-  transition: background 0.3s ease, transform 0.25s ease, box-shadow 0.3s ease;
-}
-
-.card.filtrado {
-  background: #e8f0ff;
-  box-shadow: 0 10px 25px rgba(32, 56, 168, 0.4);
-  transform: scale(1.01);
-}
-.contador {
-  color: white;
-  margin: 15px 0;
-  font-weight: bold;
-}
-@media (max-width: 600px) {
-
-  .box-busca {
-    padding: 20px;
-  }
-
-  .linha-filtros {
-    flex-direction: column;
-  }
-
-  .linha-filtros input {
-    width: 100%;
-  }
-
-  .card {
-    font-size: 14px;
-  }
-
-  .topo h1 {
-    font-size: 18px;
-    text-align: center;
-  }
-
-}
-/* DARK MODE */
-body.dark {
-  background: linear-gradient(180deg, #121212, #1e1e1e);
-}
-
-body.dark .topo {
-  background: #222;
-}
-
-body.dark .box-busca {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-body.dark .card {
-  background: #1f1f1f;
-  color: white;
-}
-
-body.dark .card.filtrado {
-  background: #263a63;
-}
-
-body.dark input,
-body.dark button {
-  background: #2a2a2a;
-  color: white;
-}
-
-/* BOTÃO COM ÍCONE */
 #pesquisar {
   display: flex;
   align-items: center;
@@ -217,85 +112,159 @@ body.dark button {
   gap: 8px;
 }
 
-/* ÍCONE */
-#pesquisar .icon {
-  display: inline-block;
-  transition: transform 0.3s ease;
-}
-
-/* ANIMAÇÃO ATIVA */
 #pesquisar.loading .icon {
   animation: girar 0.8s linear infinite;
 }
 
-@keyframes girar {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-#pesquisar:disabled {
-  opacity: 0.7;
+#pesquisar:disabled,
+.btn-limpar:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
 }
-.btn-limpar {
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  background: #f2f2f2;
+
+@keyframes girar {
+  from { transform: rotate(0); }
+  to { transform: rotate(360deg); }
 }
 
-.btn-limpar:hover {
-  background: #e0e0e0;
-}
-/* BOTÃO LIMPAR */
 .btn-limpar {
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
   background: #f2f2f2;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: background 0.3s, transform 0.3s;
 }
 
-.btn-limpar:hover:not(:disabled) {
-  background: #e0e0e0;
+/* ================= CONTADOR ================= */
+.contador {
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  font-size: 13px;
 }
 
-/* DESATIVADO */
-.btn-limpar:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+/* ================= CARDS DO TOPO ================= */
+.resumo-card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.2);
+  display: flex;
+  flex-direction: column;
 }
 
-/* ÍCONE */
-.icone-limpar {
-  display: inline-block;
-  transition: transform 0.4s ease;
+/* ================= RESULTADOS ================= */
+#resultado {
+  width: 100%;
+  max-width: 1000px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
 }
 
-.btn-limpar:hover:not(:disabled) .icone-limpar {
-  transform: rotate(180deg);
+/* ================= CARD ================= */
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.2);
+  font-size: 14px;
+  line-height: 1.35;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-/* MODAL */
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.25);
+}
+
+.card strong {
+  color: #2038a8;
+}
+
+.card-header {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.card-icon {
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+/* ================= OVERLAY ================= */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ================= PAINEL DETALHES ================= */
+.painel-detalhes {
+  background: white;
+  width: 90%;
+  max-width: 520px;
+  border-radius: 18px;
+  padding: 22px 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.35s ease;
+  position: relative;
+}
+
+.overlay.show .painel-detalhes {
+  transform: scale(1) translateY(0);
+}
+
+/* ================= BOTÃO FECHAR ================= */
+.painel-detalhes .fechar {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.painel-detalhes .fechar:hover {
+  opacity: 1;
+}
+
+/* ================= CONTEÚDO DETALHES ================= */
+#conteudoDetalhes {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+#conteudoDetalhes strong {
+  color: #2038a8;
+}
+
+/* ================= MODAL ================= */
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, .6);
+  background: rgba(0,0,0,.6);
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 3000;
 }
 
 .modal.show {
@@ -306,10 +275,9 @@ body.dark button {
   background: white;
   padding: 25px;
   border-radius: 14px;
-  text-align: center;
   width: 90%;
   max-width: 320px;
-  animation: zoom .25s ease;
+  text-align: center;
 }
 
 .modal-botoes {
@@ -325,114 +293,80 @@ body.dark button {
   cursor: pointer;
 }
 
-@keyframes zoom {
-  from {
-    transform: scale(.9);
-    opacity: 0;
+/* ================= OCULTAÇÃO ================= */
+.oculto {
+  display: none !important;
+}
+
+/* ================= RESPONSIVO ================= */
+@media (max-width: 1000px) {
+  .topo-layout {
+    grid-template-columns: 1fr;
   }
+}
 
-  to {
-    transform: scale(1);
-    opacity: 1;
+@media (max-width: 700px) {
+  #resultado {
+    grid-template-columns: 1fr;
   }
 }
 
-/* ANIMAÇÃO DE SAÍDA DOS CARDS */
-.card.saindo {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all .25s ease;
-}
-/* ===============================
-   LAYOUT COMPACTO
-================================ */
-
-.box-busca.compacto {
-  padding: 18px;
-  gap: 10px;
-  max-width: 420px;
-}
-
-/* INPUTS */
-.box-busca.compacto input {
-  padding: 8px;
-  font-size: 13px;
-}
-
-/* FILTROS */
-.linha-filtros.compacto {
-  gap: 8px;
-}
-
-.linha-filtros.compacto input {
-  width: 50%;
-}
-
-/* BOTÕES EM LINHA */
-.linha-botoes {
-  display: flex;
-  gap: 8px;
-}
-
-.linha-botoes button {
-  flex: 1;
-  padding: 9px;
-  font-size: 13px;
-  border-radius: 8px;
-}
-
-/* CONTADOR MAIS PRÓXIMO */
-.contador.compacto {
-  margin: 8px 0 0;
-  font-size: 13px;
-  text-align: center;
-}
-
-/* RESULTADOS MAIS DENSOS */
-#resultado {
-  margin-top: 20px;
-}
-
-.card {
-  padding: 12px 16px;
-  font-size: 14px;
-  line-height: 1.35;
-}
-
-/* MOBILE */
 @media (max-width: 600px) {
   .linha-botoes {
     flex-direction: column;
   }
 
-  .linha-botoes button {
-    width: 100%;
+  .topo h1 {
+    font-size: 18px;
+    text-align: center;
   }
 
-  .box-busca.compacto {
-    padding: 15px;
+  .card {
+    font-size: 13px;
+  }
+
+  .painel-detalhes {
+    padding: 18px 16px;
   }
 }
-.boas-vindas {
-  max-width: 700px;
-  margin: 15px auto 0;
-  padding: 12px 18px;
+
+/* ================= BLOQUEIO DE SCROLL ================= */
+body.sem-scroll {
+  overflow: hidden;
+}
+
+/* ================= MAPA BRASIL ================= */
+.mapa-brasil {
+  width: 100%;
+  max-width: 480px;
+  margin: auto;
+  background: #f4f7ff;
+  border-radius: 8px;
+  padding: 10px;
+  box-sizing: border-box;
+  box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+}
+
+.mapa-brasil svg {
+  width: 100%;
+  height: auto;
+}
+
+.mapa-brasil path {
+  stroke: #ffffff;
+  stroke-width: 1;
+  transition: fill 0.3s ease;
+}
+
+.mapa-brasil path:hover {
+  fill: #4d7fe2 !important;
+  cursor: pointer;
+}
+
+.mapa-tooltip {
+  font-size: 14px;
   text-align: center;
-  color: white;
-  font-size: 15px;
-  font-weight: 500;
-  opacity: 0;
-  transform: translateY(-5px);
-  transition: all 0.3s ease;
-}
-
-/* quando ativa */
-.boas-vindas.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* destaque do nome */
-.boas-vindas strong {
-  color: #ffeb3b;
+  margin-top: 8px;
+  font-weight: 600;
+  color: #555;
 }

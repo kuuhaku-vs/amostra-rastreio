@@ -7,24 +7,21 @@ let dados = [];
 let dadosVendedora = [];
 let csvCarregado = false;
 
-/* ================= ELEMENTOS LOGIN ================= */
+/* ================= ELEMENTOS ================= */
 const loginBox = document.getElementById("loginVendedor");
 const codigoVendedor = document.getElementById("codigoVendedor");
 const btnLogin = document.getElementById("btnLoginVendedor");
 const erroLogin = document.getElementById("erroLogin");
 
-/* ================= SISTEMA ================= */
 const sistema = document.getElementById("sistema");
 const trocarVendedor = document.getElementById("trocarVendedor");
 
 const campoBusca = document.getElementById("filtroBusca");
 const resultado = document.getElementById("resultado");
 const painelTabela = document.getElementById("painelTabela");
-const painelGrafico = document.getElementById("painelGrafico");
 const contador = document.getElementById("contador");
 const boasVindas = document.getElementById("boasVindas");
 
-/* ================= MODAL DETALHES ================= */
 const overlay = document.getElementById("overlayDetalhes");
 const conteudoDetalhes = document.getElementById("conteudoDetalhes");
 
@@ -40,11 +37,10 @@ function normalizar(v) {
   return v?.toString().trim().toUpperCase();
 }
 
-/* ================= TRAVAR SCROLL ================= */
+/* ================= SCROLL ================= */
 function travarScroll() {
   document.body.style.overflow = "hidden";
 }
-
 function liberarScroll() {
   document.body.style.overflow = "";
 }
@@ -59,7 +55,7 @@ Papa.parse(url, {
   }
 });
 
-/* ================= CAPS LOCK SEMPRE ATIVO ================= */
+/* ================= CAPSLOCK ================= */
 codigoVendedor.addEventListener("input", () => {
   codigoVendedor.value = codigoVendedor.value.toUpperCase();
 });
@@ -97,14 +93,10 @@ function validarCodigo() {
   `;
 
   painelTabela.classList.remove("oculto");
-  painelGrafico.classList.remove("oculto");
   resultado.classList.remove("oculto");
 
   filtrar();
 }
-
-/* ================= TROCAR VENDEDOR ================= */
-trocarVendedor.onclick = () => location.reload();
 
 /* ================= FILTRO ================= */
 campoBusca.oninput = filtrar;
@@ -122,7 +114,7 @@ function filtrar() {
   renderizar(lista);
 }
 
-/* ================= AGRUPAR POR NOTA ================= */
+/* ================= AGRUPAR ================= */
 function agruparPorNota(lista) {
   const mapa = {};
   lista.forEach(l => {
@@ -142,10 +134,9 @@ function renderizar(lista) {
 
   grupos.forEach(grupo => {
     const l = grupo[0];
-
     const card = document.createElement("div");
     card.className = "card";
-    card.addEventListener("click", () => abrirDetalhes(grupo));
+    card.onclick = () => abrirDetalhes(grupo);
 
     card.innerHTML = `
       <strong>Nota:</strong> ${l[0]}<br>
@@ -154,17 +145,14 @@ function renderizar(lista) {
       <strong>Situação:</strong> ${l[25]}<br>
       <strong>Itens:</strong> ${grupo.length}
     `;
-
     resultado.appendChild(card);
   });
 }
 
-/* ================= TABELA SITUAÇÃO ================= */
+/* ================= TABELA ================= */
 function gerarTabelaSituacao(lista) {
   const mapa = {};
-  lista.forEach(l => {
-    mapa[l[25]] = (mapa[l[25]] || 0) + 1;
-  });
+  lista.forEach(l => mapa[l[25]] = (mapa[l[25]] || 0) + 1);
 
   return `
     <strong>Situação dos pedidos</strong><br>
@@ -175,41 +163,52 @@ function gerarTabelaSituacao(lista) {
 /* ================= DETALHES ================= */
 function abrirDetalhes(grupo) {
   const l = grupo[0];
+  const rastreio = l[1] || "Não informado";
 
   conteudoDetalhes.innerHTML = `
     <h3>Detalhes da Nota</h3>
 
-    <p><strong>Nota:</strong> ${l[0]}</p>
-    <p><strong>Pedido:</strong> ${l[14]}</p>
-    <p><strong>Rastreio:</strong> ${l[1] || "Não informado"}</p>
+    <div class="linha-dupla">
+      <span><strong>Nota:</strong> ${l[0]}</span>
+      <span><strong>Pedido:</strong> ${l[14]}</span>
+    </div>
+
+    <p class="linha-rastreio">
+      <strong>Rastreio:</strong>
+      <span class="rastreio-link" onclick="abrirRastreio('${rastreio}')">
+        ${rastreio}
+      </span>
+      ${rastreio !== "Não informado"
+      ? `<button class="btn-copiar" onclick="copiarRastreio('${rastreio}')">📋</button>
+           <button class="btn-rastrear" onclick="abrirRastreio('${rastreio}')">📦</button>`
+      : ""
+    }
+    </p>
 
     <p><strong>Cliente:</strong> ${l[7]}</p>
     <p><strong>Situação:</strong> ${l[25]}</p>
 
-    <div style="display:flex; gap:20px; margin:10px 0;">
-      <p><strong>Postagem:</strong><br>${l[5] || "-"}</p>
-      <p><strong>Prazo:</strong><br>${l[13] || "-"}</p>
+    <div class="linha-dupla">
+      <span><strong>Postagem:</strong> ${l[5] || "-"}</span>
+      <span><strong>Prazo:</strong> ${l[13] || "-"}</span>
     </div>
 
     <hr>
 
     <strong>Itens da nota:</strong>
-    <ul>
-      ${grupo.map(i => `
-        <li>
-          ${i[15]} — ${i[16]} un  
-          <br><small><strong>Tipo amostra:</strong> ${i[17] || "-"}</small>
-        </li>
-      `).join("")}
+    <ul class="lista-itens">
+      ${grupo.map(i =>
+      `<li>${i[16]} - ${i[17]} - ${i[15]}</li>`
+    ).join("")}
     </ul>
   `;
 
-  overlay.classList.remove("oculto");
   overlay.classList.add("show");
+  overlay.classList.remove("oculto");
   travarScroll();
 }
 
-/* ================= FECHAR DETALHES ================= */
+/* ================= FECHAR ================= */
 function fecharDetalhes() {
   overlay.classList.remove("show");
   overlay.classList.add("oculto");
@@ -220,9 +219,102 @@ overlay.addEventListener("click", e => {
   if (e.target === overlay) fecharDetalhes();
 });
 
-/* ================= FECHAR COM ESC ================= */
 document.addEventListener("keydown", e => {
   if (e.key === "Escape" && overlay.classList.contains("show")) {
     fecharDetalhes();
   }
 });
+
+/* ================= RASTREIO ================= */
+function abrirDetalhes(grupo) {
+  const l = grupo[0];
+  const rastreio = l[1] || "Não informado";
+
+  conteudoDetalhes.innerHTML = `
+    <div class="detalhes-centro">
+
+      <h3>Detalhes da Nota</h3>
+
+      <div class="linha-dupla">
+        <span><strong>Nota Fiscal:</strong> ${l[0]}</span>
+        <span><strong>Pedido:</strong> ${l[14]}</span>
+      </div>
+
+      <div class="linha-rastreio-central">
+        <strong>Rastreio:</strong>
+        <span class="codigo-rastreio">${rastreio}</span>
+
+        ${rastreio !== "Não informado"
+      ? `
+              <button class="btn-rastrear-unico"
+                onclick="rastrearCorreios('${rastreio}')">
+                📦 Rastrear
+              </button>
+            `
+      : ""
+    }
+      </div>
+
+      <p class="linha-simples">
+        <strong>Cliente:</strong> ${l[7]}
+      </p>
+
+      <p class="linha-simples">
+        <strong>Situação:</strong> ${l[25]}
+      </p>
+
+      <div class="linha-dupla">
+        <span><strong>Postagem:</strong> ${l[5] || "-"}</span>
+        <span><strong>Prazo:</strong> ${l[13] || "-"}</span>
+      </div>
+
+      <hr>
+
+      <strong>Itens da nota:</strong>
+      <ul class="lista-itens">
+        ${grupo.map(i => `
+          <li>
+            ${i[16]} - ${i[17]} - ${i[15]}
+          </li>
+        `).join("")}
+      </ul>
+
+    </div>
+  `;
+
+  overlay.classList.add("show");
+  overlay.classList.remove("oculto");
+  travarScroll();
+}
+
+
+function copiarRastreio(codigo) {
+  navigator.clipboard.writeText(codigo).then(() => {
+    mostrarToast("📋 Código copiado!");
+  });
+}
+
+/* ================= TOAST ================= */
+function mostrarToast(msg) {
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerText = msg;
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.classList.add("show"), 10);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, 2000);
+}
+
+function rastrearCorreios(codigo) {
+  if (!codigo) return;
+
+  // Copia o código
+  navigator.clipboard.writeText(codigo);
+
+  // Abre site dos Correios com o rastreio
+  const url = `https://rastreamento.correios.com.br/app/index.php?objetos=${codigo}`;
+  window.open(url, "_blank");
+}

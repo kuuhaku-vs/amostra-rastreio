@@ -42,10 +42,13 @@
         <section id="loginVendedor" class="box-busca">
             <h3 style="text-align:center;color:white;">Login do Vendedor</h3>
 
-            <input id="codigoVendedor" type="text" placeholder="Digite o código do vendedor" autocomplete="off" />
+            <input id="codigoVendedor" type="text" placeholder="Digite o código do vendedor" autocomplete="off"
+                autocapitalize="characters" spellcheck="false" />
+
             <button id="btnLoginVendedor">Entrar</button>
 
-            <div id="erroLogin" style="color:#ffeb3b;text-align:center;font-size:13px;"></div>
+            <div id="erroLogin" style="color:#ffeb3b;text-align:center;font-size:13px;margin-top:8px;">
+            </div>
         </section>
 
         <!-- ================= SISTEMA (COMEÇA OCULTO) ================= -->
@@ -54,35 +57,40 @@
             <!-- BOAS VINDAS -->
             <div id="boasVindas" class="boas-vindas"></div>
 
-            <!-- TROCAR VENDEDOR (SÓ APÓS LOGIN) -->
-            <button id="trocarVendedor" type="button" class="oculto" style="margin-bottom:20px;">
+            <!-- TROCAR VENDEDOR -->
+            <button id="trocarVendedor" type="button" class="oculto trocar-vendedor">
                 🔄 Trocar vendedor
             </button>
 
             <!-- ================= TOPO LAYOUT ================= -->
             <section class="topo-layout">
 
-                <!-- BUSCA / FILTROS (COMEÇA OCULTO) -->
+                <!-- BUSCA / FILTROS -->
                 <div class="box-busca oculto" id="boxFiltros">
-                    <input id="filtroBusca" type="text" placeholder="Nota Fiscal ou Pedido" disabled />
+                    <input id="filtroBusca" type="text" placeholder="Buscar por Nota Fiscal ou Pedido" disabled />
 
                     <div class="linha-botoes">
-                        <button id="limpar" class="btn-limpar" disabled>🧹 Limpar</button>
+                        <button id="limpar" class="btn-limpar" disabled>
+                            🧹 Limpar
+                        </button>
                     </div>
 
                     <div id="contador" class="contador"></div>
                 </div>
 
-                <!-- TABELA -->
-                <div id="painelTabela" class="resumo-card oculto"></div>
+                <!-- RESUMO SITUAÇÃO -->
+                <div id="painelTabela" class="resumo-card oculto">
+                </div>
 
-                <!-- MAPA -->
-                <div id="painelGrafico" class="resumo-card oculto"></div>
+                <!-- GRÁFICO -->
+                <div id="painelGrafico" class="resumo-card oculto">
+                </div>
 
             </section>
 
             <!-- ================= RESULTADOS ================= -->
-            <section id="resultado" class="lista-cards oculto"></section>
+            <section id="resultado" class="lista-cards oculto">
+            </section>
 
         </section>
 

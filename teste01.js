@@ -391,3 +391,4 @@ function limparTudo() {
 
   botaoLimpar.disabled = true;
 }
+

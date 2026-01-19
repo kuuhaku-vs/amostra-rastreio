@@ -235,6 +235,23 @@ body {
   transform: scale(1) translateY(0);
 }
 
+.rastreio-copiavel {
+  cursor: pointer;
+  color: #1a4cff;
+  font-weight: 600;
+}
+
+.rastreio-copiavel:hover {
+  text-decoration: underline;
+}
+
+.copiado-msg {
+  margin-left: 8px;
+  color: green;
+  font-weight: 600;
+  font-size: 12px;
+}
+
 /* ================= BOTÃO FECHAR ================= */
 .painel-detalhes .fechar {
   position: absolute;
@@ -329,4 +346,133 @@ body {
   #resultado {
     grid-template-columns: 1fr;
   }
+}
+
+/* Detalhes - layout compacto */
+.linha-topo {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.linha-detalhe {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.linha-datas {
+  display: flex;
+  gap: 24px;
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.btn-copiar {
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #4d7fe2;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-copiar:hover {
+  background: #355fc4;
+}
+
+.lista-itens li {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+/* ===== MODAL DETALHES CENTRALIZADO ===== */
+.detalhes-centro {
+  text-align: center;
+  font-size: 15px;
+}
+
+.detalhes-centro h3 {
+  margin-bottom: 16px;
+}
+
+/* Linhas simples */
+.linha-simples {
+  margin: 6px 0;
+}
+
+/* Duas informações lado a lado */
+.linha-dupla {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 8px 0;
+  flex-wrap: wrap;
+}
+
+/* Rastreio centralizado */
+.linha-rastreio-central {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+
+.codigo-rastreio {
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+/* Botões ícone */
+.btn-icone {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.btn-icone:hover {
+  transform: scale(1.15);
+}
+
+/* Lista de itens */
+.lista-itens {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.lista-itens li {
+  margin: 4px 0;
+  font-size: 14px;
+  
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .linha-dupla {
+    gap: 15px;
+  }
+}
+
+.btn-rastrear-unico {
+  margin-left: 8px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 20px;
+  background: #4d7fe2;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-rastrear-unico:hover {
+  background: #3b68c5;
 }

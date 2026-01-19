@@ -1,221 +1,97 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rastreamento de Amostras</title>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css" />
-
-  <style>
-    /* ====== MAPA BRASIL ====== */
-    .mapa-brasil {
-      background: #f4f7ff;
-      border-radius: 8px;
-      padding: 10px;
-      box-sizing: border-box;
-      box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
-      max-width: 480px;
-      margin: 0 auto 20px auto;
-    }
-
-    .mapa-brasil svg {
-      width: 100%;
-      height: auto;
-      display: block;
-      margin: 0 auto;
-    }
-
-    .mapa-brasil path {
-      stroke: #fff;
-      stroke-width: 1;
-      transition: fill 0.3s ease;
-      cursor: pointer;
-    }
-
-    .mapa-brasil path:hover {
-      fill: #4d7fe2 !important;
-    }
-
-    .mapa-tooltip {
-      font-size: 14px;
-      text-align: center;
-      margin-top: 6px;
-      font-weight: 600;
-      color: #555;
-      user-select: none;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rastreamento de Amostras</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <!-- ================= OVERLAY DETALHES ================= -->
-  <div
-    id="overlayDetalhes"
-    class="overlay oculto"
-    aria-hidden="true"
-  >
-    <div class="painel-detalhes" role="dialog" aria-modal="true">
-      <button
-        class="fechar"
-        type="button"
-        aria-label="Fechar detalhes"
-        onclick="fecharDetalhes()"
-      >
-        ✕
-      </button>
 
-      <div id="conteudoDetalhes"></div>
-    </div>
-  </div>
-
-  <!-- ================= MODAL LIMPAR ================= -->
-  <div
-    id="modalLimpar"
-    class="modal"
-    aria-hidden="true"
-  >
-    <div class="modal-box" role="dialog" aria-modal="true">
-      <p>Deseja limpar todos os filtros?</p>
-
-      <div class="modal-botoes">
-        <button id="confirmarLimpar" type="button">Sim</button>
-        <button id="cancelarLimpar" type="button">Cancelar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= TOPO ================= -->
-  <header class="topo">
-    <img
-      src="4k BRANCO.png"
-      class="logo"
-      alt="Logo da empresa"
-    />
-    <h1>Rastreamento de Amostras</h1>
-  </header>
-
-  <!-- ================= CONTEÚDO ================= -->
-  <main class="container">
-    <!-- ================= TOPO LAYOUT ================= -->
-    <section class="topo-layout">
-      <!-- ================= BUSCA ================= -->
-      <div class="box-busca">
-        <input
-          id="codigo"
-          type="text"
-          placeholder="Código da vendedora"
-          autocomplete="off"
-          inputmode="text"
-        />
-
-        <input
-          id="filtroBusca"
-          type="text"
-          placeholder="Nota Fiscal ou Pedido"
-          autocomplete="off"
-          inputmode="text"
-          disabled
-        />
-
-        <!-- BOAS-VINDAS -->
-        <div
-          id="boasVindas"
-          class="boas-vindas"
-          aria-live="polite"
-        ></div>
-
-        <!-- BOTÕES -->
-        <div class="linha-botoes">
-          <button id="pesquisar" type="button">
-            <span class="icon" aria-hidden="true">🔍</span>
-            <span class="texto-btn">Pesquisar</span>
-          </button>
-
-          <button
-            id="limpar"
-            class="btn-limpar"
-            type="button"
-            disabled
-          >
-            <span class="icone-limpar" aria-hidden="true">🧹</span>
-            Limpar
-          </button>
+    <!-- ================= OVERLAY DETALHES ================= -->
+    <div id="overlayDetalhes" class="overlay oculto">
+        <div class="painel-detalhes">
+            <button class="fechar" type="button" onclick="fecharDetalhes()">✕</button>
+            <div id="conteudoDetalhes"></div>
         </div>
+    </div>
 
-        <div id="contador" class="contador"></div>
-      </div>
-
-      <!-- ================= CARD TABELA ================= -->
-      <div
-        id="painelTabela"
-        class="resumo-card oculto"
-        aria-hidden="true"
-      ></div>
-
-      <!-- ================= CARD GRÁFICO ================= -->
-      <div
-        id="painelGrafico"
-        class="resumo-card oculto"
-        aria-hidden="true"
-      >
-        <!-- Mapa do Brasil -->
-        <div class="mapa-brasil" aria-label="Mapa do Brasil com envios por estado" role="img" tabindex="0">
-          <svg
-            id="mapaBrasil"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 959 593"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <!-- SVG paths para cada estado, id igual a sigla UF -->
-            <!-- Exemplos para SP, RJ, MG, etc -->
-            <!-- Use o SVG completo do Brasil com 27 estados para seu projeto -->
-            <path id="AC" data-nome="Acre" d="M104 504L85 491L81 491L66 506L59 526L55 540L63 557L74 558L83 552L91 538L91 530L103 520Z"/>
-            <path id="AL" data-nome="Alagoas" d="M806 453L809 456L811 458L813 464L812 472L810 477L808 480L805 476L802 468L802 459Z"/>
-            <path id="AP" data-nome="Amapá" d="M794 345L797 351L798 356L800 362L802 365L804 367L806 368L808 364L810 360L810 354L806 350L802 347Z"/>
-            <path id="AM" data-nome="Amazonas" d="M140 360L133 355L128 354L122 360L115 370L110 378L115 385L123 390L133 385L138 377Z"/>
-            <path id="BA" data-nome="Bahia" d="M710 420L714 423L719 425L724 426L729 430L734 434L737 439L733 442L728 440L722 436Z"/>
-            <path id="CE" data-nome="Ceará" d="M749 367L752 370L755 374L758 379L762 385L765 390L768 393L772 395L775 398L776 395L773 388Z"/>
-            <path id="DF" data-nome="Distrito Federal" d="M650 400L652 404L654 408L656 412L658 416L660 418L662 420L664 418L666 416L668 414Z"/>
-            <path id="ES" data-nome="Espírito Santo" d="M710 395L713 398L715 402L718 405L720 408L723 411L726 414L728 413L730 411L732 409Z"/>
-            <path id="GO" data-nome="Goiás" d="M635 410L638 413L640 417L642 421L645 425L648 428L650 430L652 428L655 425L658 422Z"/>
-            <path id="MA" data-nome="Maranhão" d="M740 350L742 354L744 359L746 363L749 368L752 373L754 376L757 378L760 381L763 384Z"/>
-            <path id="MT" data-nome="Mato Grosso" d="M600 420L605 425L610 430L615 435L620 440L625 445L630 450L635 455L640 460L645 465Z"/>
-            <path id="MS" data-nome="Mato Grosso do Sul" d="M590 430L595 435L600 440L605 445L610 450L615 455L620 460L625 465L630 470L635 475Z"/>
-            <path id="MG" data-nome="Minas Gerais" d="M670 430L675 435L680 440L685 445L690 450L695 455L700 460L705 465L710 470L715 475Z"/>
-            <path id="PA" data-nome="Pará" d="M160 350L165 355L170 360L175 365L180 370L185 375L190 380L195 385L200 390L205 395Z"/>
-            <path id="PB" data-nome="Paraíba" d="M775 380L778 385L780 388L783 392L785 395L787 397L790 400L792 402L794 404L796 406Z"/>
-            <path id="PR" data-nome="Paraná" d="M680 460L685 465L690 470L695 475L700 480L705 485L710 490L715 495L720 500L725 505Z"/>
-            <path id="PE" data-nome="Pernambuco" d="M780 390L783 394L785 397L788 401L790 405L793 408L795 410L798 413L800 415L803 418Z"/>
-            <path id="PI" data-nome="Piauí" d="M755 375L758 380L760 383L763 386L765 389L768 392L770 395L773 398L775 401L778 404Z"/>
-            <path id="RJ" data-nome="Rio de Janeiro" d="M710 410L713 414L716 418L719 422L722 426L725 430L728 434L731 438L734 442L737 446Z"/>
-            <path id="RN" data-nome="Rio Grande do Norte" d="M770 370L773 373L776 377L779 381L782 385L785 389L788 393L791 397L794 401L797 405Z"/>
-            <path id="RS" data-nome="Rio Grande do Sul" d="M690 490L695 495L700 500L705 505L710 510L715 515L720 520L725 525L730 530L735 535Z"/>
-            <path id="RO" data-nome="Rondônia" d="M110 480L115 485L120 490L125 495L130 500L135 505L140 510L145 515L150 520L155 525Z"/>
-            <path id="RR" data-nome="Roraima" d="M150 330L155 335L160 340L165 345L170 350L175 355L180 360L185 365L190 370L195 375Z"/>
-            <path id="SC" data-nome="Santa Catarina" d="M675 475L680 480L685 485L690 490L695 495L700 500L705 505L710 510L715 515L720 520Z"/>
-            <path id="SE" data-nome="Sergipe" d="M795 445L798 448L800 450L803 452L805 455L807 458L810 460L812 462L815 465L817 468Z"/>
-            <path id="SP" data-nome="São Paulo" d="M695 435L700 440L705 445L710 450L715 455L720 460L725 465L730 470L735 475L740 480Z"/>
-            <path id="TO" data-nome="Tocantins" d="M720 380L725 385L730 390L735 395L740 400L745 405L750 410L755 415L760 420L765 425Z"/>
-          </svg>
-          <div id="mapaTooltip" class="mapa-tooltip" aria-live="polite" aria-atomic="true">
-            Passe o mouse sobre um estado
-          </div>
+    <!-- ================= MODAL LIMPAR ================= -->
+    <div id="modalLimpar" class="modal oculto">
+        <div class="modal-box">
+            <p>Deseja limpar todos os filtros?</p>
+            <div class="modal-botoes">
+                <button id="confirmarLimpar">Sim</button>
+                <button id="cancelarLimpar">Cancelar</button>
+            </div>
         </div>
-      </div>
-    </section>
+    </div>
 
-    <!-- ================= RESULTADOS ================= -->
-    <section
-      id="resultado"
-      aria-live="polite"
-    ></section>
-  </main>
+    <!-- ================= TOPO ================= -->
+    <header class="topo">
+        <img src="4k BRANCO.png" class="logo" alt="Logo da empresa" />
+        <h1>Rastreamento de Amostras</h1>
+    </header>
 
-  <!-- ================= SCRIPTS ================= -->
-  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
-  <script src="teste01.js"></script>
+    <!-- ================= CONTEÚDO ================= -->
+    <main class="container">
+
+        <!-- ================= LOGIN ================= -->
+        <section id="loginVendedor" class="box-busca">
+            <h3 style="text-align:center;color:white;">Login do Vendedor</h3>
+
+            <input id="codigoVendedor" type="text" placeholder="Digite o código do vendedor" autocomplete="off" />
+            <button id="btnLoginVendedor">Entrar</button>
+
+            <div id="erroLogin" style="color:#ffeb3b;text-align:center;font-size:13px;"></div>
+        </section>
+
+        <!-- ================= SISTEMA (COMEÇA OCULTO) ================= -->
+        <section id="sistema" class="oculto">
+
+            <!-- BOAS VINDAS -->
+            <div id="boasVindas" class="boas-vindas"></div>
+
+            <!-- TROCAR VENDEDOR (SÓ APÓS LOGIN) -->
+            <button id="trocarVendedor" type="button" class="oculto" style="margin-bottom:20px;">
+                🔄 Trocar vendedor
+            </button>
+
+            <!-- ================= TOPO LAYOUT ================= -->
+            <section class="topo-layout">
+
+                <!-- BUSCA / FILTROS (COMEÇA OCULTO) -->
+                <div class="box-busca oculto" id="boxFiltros">
+                    <input id="filtroBusca" type="text" placeholder="Nota Fiscal ou Pedido" disabled />
+
+                    <div class="linha-botoes">
+                        <button id="limpar" class="btn-limpar" disabled>🧹 Limpar</button>
+                    </div>
+
+                    <div id="contador" class="contador"></div>
+                </div>
+
+                <!-- TABELA -->
+                <div id="painelTabela" class="resumo-card oculto"></div>
+
+                <!-- MAPA -->
+                <div id="painelGrafico" class="resumo-card oculto"></div>
+
+            </section>
+
+            <!-- ================= RESULTADOS ================= -->
+            <section id="resultado" class="lista-cards oculto"></section>
+
+        </section>
+
+    </main>
+
+    <!-- ================= SCRIPTS ================= -->
+    <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="teste01.js"></script>
+
 </body>
+
 </html>

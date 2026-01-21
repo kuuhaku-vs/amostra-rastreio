@@ -113,7 +113,7 @@ function validarCodigo() {
     logoMarca.src = "luara branco.png";
   } else {
     document.body.classList.add("tema-quatrok");
-    logoMarca.src = "Logo - Grupo 4k - Branco.png";
+    logoMarca.src = "4k BRANCO.png";
   }
 
   filtrar();
@@ -349,3 +349,4 @@ trocarVendedor.addEventListener("click", () => {
   loginBox.classList.remove("oculto");
   codigoVendedor.focus();
 });
+

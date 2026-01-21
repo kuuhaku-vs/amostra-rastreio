@@ -1,105 +1,101 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Rastreamento de Amostras</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rastreamento de Amostras</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-    <!-- ================= OVERLAY DETALHES ================= -->
-    <div id="overlayDetalhes" class="overlay oculto">
-        <div class="painel-detalhes">
-            <button class="fechar" type="button" onclick="fecharDetalhes()">✕</button>
-            <div id="conteudoDetalhes"></div>
-        </div>
+  <!-- ================= OVERLAY DETALHES ================= -->
+  <div id="overlayDetalhes" class="overlay oculto">
+    <div class="painel-detalhes">
+      <button class="fechar" type="button" onclick="fecharDetalhes()">✕</button>
+      <div id="conteudoDetalhes"></div>
     </div>
+  </div>
 
-    <!-- ================= MODAL LIMPAR ================= -->
-    <div id="modalLimpar" class="modal oculto">
-        <div class="modal-box">
-            <p>Deseja limpar todos os filtros?</p>
-            <div class="modal-botoes">
-                <button id="confirmarLimpar">Sim</button>
-                <button id="cancelarLimpar">Cancelar</button>
-            </div>
-        </div>
+  <!-- ================= MODAL LIMPAR ================= -->
+  <div id="modalLimpar" class="modal oculto">
+    <div class="modal-box">
+      <p>Deseja limpar todos os filtros?</p>
+      <div class="modal-botoes">
+        <button id="confirmarLimpar">Sim</button>
+        <button id="cancelarLimpar">Cancelar</button>
+      </div>
     </div>
+  </div>
 
-    <!-- ================= TOPO ================= -->
-    <header class="topo">
-        <img src="4k BRANCO.png" class="logo" alt="Logo da empresa" />
-        <h1>Rastreamento de Amostras</h1>
-    </header>
+  <!-- ================= TOPO ================= -->
+  <header class="topo">
+    <img id="logoMarca" src="Logo - Grupo 4k - Branco.png" class="logo" alt="Logo da empresa" />
 
-    <!-- ================= CONTEÚDO ================= -->
-    <main class="container">
+    <h1>Rastreamento de Amostras</h1>
+  </header>
 
-        <!-- ================= LOGIN ================= -->
-        <section id="loginVendedor" class="box-busca">
-            <h3 style="text-align:center;color:white;">Login do Vendedor</h3>
+  <!-- ================= CONTEÚDO ================= -->
+  <main class="container">
 
-            <input id="codigoVendedor" type="text" placeholder="Digite o código do vendedor" autocomplete="off"
-                autocapitalize="characters" spellcheck="false" />
+    <!-- ================= LOGIN ================= -->
+    <section id="loginVendedor" class="box-busca">
+      <h3 style="text-align:center;color:white;">Login do Vendedor</h3>
 
-            <button id="btnLoginVendedor">Entrar</button>
+      <input
+        id="codigoVendedor"
+        type="text"
+        placeholder="Digite o código do vendedor"
+        autocomplete="off"
+      />
+      <button id="btnLoginVendedor">Entrar</button>
 
-            <div id="erroLogin" style="color:#ffeb3b;text-align:center;font-size:13px;margin-top:8px;">
-            </div>
-        </section>
+      <div id="erroLogin" style="color:#ffeb3b;text-align:center;font-size:13px;"></div>
+    </section>
 
-        <!-- ================= SISTEMA (COMEÇA OCULTO) ================= -->
-        <section id="sistema" class="oculto">
+    <!-- ================= SISTEMA ================= -->
+    <section id="sistema" class="oculto">
 
-            <!-- BOAS VINDAS -->
-            <div id="boasVindas" class="boas-vindas"></div>
+      <!-- ================= TOPO LAYOUT ================= -->
+      <section class="topo-layout">
 
-            <!-- TROCAR VENDEDOR -->
-            <button id="trocarVendedor" type="button" class="oculto trocar-vendedor">
-                🔄 Trocar vendedor
-            </button>
+        <!-- ================= BUSCA / INFO ================= -->
+        <div class="box-busca oculto" id="boxFiltros">
 
-            <!-- ================= TOPO LAYOUT ================= -->
-            <section class="topo-layout">
+          <!-- BOAS VINDAS (ÁREA VERDE) -->
+          <div id="boasVindas" class="boas-vindas"></div>
 
-                <!-- BUSCA / FILTROS -->
-                <div class="box-busca oculto" id="boxFiltros">
-                    <input id="filtroBusca" type="text" placeholder="Buscar por Nota Fiscal ou Pedido" disabled />
+          <input
+            id="filtroBusca"
+            type="text"
+            placeholder="Buscar por Nota Fiscal ou Pedido"
+            disabled
+          />
 
-                    <div class="linha-botoes">
-                        <button id="limpar" class="btn-limpar" disabled>
-                            🧹 Limpar
-                        </button>
-                    </div>
+          <div id="contador" class="contador"></div>
 
-                    <div id="contador" class="contador"></div>
-                </div>
+          <!-- TROCAR VENDEDOR (ÁREA VERMELHA) -->
+          <button id="trocarVendedor" type="button" class="oculto trocar-vendedor">
+          🔄 Trocar vendedor
+          </button>
 
-                <!-- RESUMO SITUAÇÃO -->
-                <div id="painelTabela" class="resumo-card oculto">
-                </div>
+        </div>
 
-                <!-- GRÁFICO -->
-                <div id="painelGrafico" class="resumo-card oculto">
-                </div>
+        <!-- ================= GRÁFICO ================= -->
+        <div id="painelGrafico" class="resumo-card oculto"></div>
 
-            </section>
+      </section>
 
-            <!-- ================= RESULTADOS ================= -->
-            <section id="resultado" class="lista-cards oculto">
-            </section>
+      <!-- ================= RESULTADOS ================= -->
+      <section id="resultado" class="lista-cards oculto"></section>
 
-        </section>
+    </section>
 
-    </main>
+  </main>
 
-    <!-- ================= SCRIPTS ================= -->
-    <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
-    <script src="teste01.js"></script>
+  <!-- ================= SCRIPTS ================= -->
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="teste01.js"></script>
 
 </body>
-
 </html>

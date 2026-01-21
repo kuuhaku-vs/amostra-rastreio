@@ -1,24 +1,26 @@
 /* ================= CONFIG ================= */
 const url =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7og0_9fNfXHoINFiE-s75rCPc-RIqAFLwcl8dQqMvEKXimWrMfgQz30QxPKul8_1Cf8RB4YSoizJy/pub?output=csv";
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7og0_9fNfXHoINFiE-s75rCPc-RIqAFLwcl8dQqMvEKXimWrMfgQz30QxPKul8_1Cf8RB4YSoizJy/pub?gid=0&single=true&output=csv";
 
 /* ================= ESTADO ================= */
 let dados = [];
 let dadosVendedora = [];
 let csvCarregado = false;
+let situacaoSelecionada = null;
 
 /* ================= ELEMENTOS ================= */
 const loginBox = document.getElementById("loginVendedor");
 const codigoVendedor = document.getElementById("codigoVendedor");
 const btnLogin = document.getElementById("btnLoginVendedor");
 const erroLogin = document.getElementById("erroLogin");
+const logoMarca = document.getElementById("logoMarca");
 
 const sistema = document.getElementById("sistema");
 const trocarVendedor = document.getElementById("trocarVendedor");
 
 const campoBusca = document.getElementById("filtroBusca");
 const resultado = document.getElementById("resultado");
-const painelTabela = document.getElementById("painelTabela");
+const painelGrafico = document.getElementById("painelGrafico");
 const contador = document.getElementById("contador");
 const boasVindas = document.getElementById("boasVindas");
 
@@ -28,13 +30,19 @@ const conteudoDetalhes = document.getElementById("conteudoDetalhes");
 /* ================= UTIL ================= */
 function saudacaoPorHorario() {
   const h = new Date().getHours();
-  if (h < 12) return "Bom dia";
-  if (h < 18) return "Boa tarde";
-  return "Boa noite";
+  if (h < 12) return "Bom dia,";
+  if (h < 18) return "Boa tarde,";
+  return "Boa noite,";
 }
 
 function normalizar(v) {
   return v?.toString().trim().toUpperCase();
+}
+
+function parseDataBR(data) {
+  if (!data) return new Date(0);
+  const [dia, mes, ano] = data.split("/");
+  return new Date(ano, mes - 1, dia);
 }
 
 /* ================= SCROLL ================= */
@@ -89,11 +97,24 @@ function validarCodigo() {
 
   boasVindas.innerHTML = `
     ${saudacaoPorHorario()} <strong>${dadosVendedora[0][23]}</strong><br>
-    Estes são todos os seus envios
+    Abaixo, envios realizados nos últimos 6 meses.
   `;
 
-  painelTabela.classList.remove("oculto");
+  painelGrafico.classList.remove("oculto");
   resultado.classList.remove("oculto");
+
+  /* ================= TEMA + LOGO ================= */
+  const marca = normalizar(dadosVendedora[0][24]);
+
+  document.body.classList.remove("tema-luara", "tema-quatrok");
+
+  if (marca === "LUARA") {
+    document.body.classList.add("tema-luara");
+    logoMarca.src = "luara branco.png";
+  } else {
+    document.body.classList.add("tema-quatrok");
+    logoMarca.src = "Logo - Grupo 4k - Branco.png";
+  }
 
   filtrar();
 }
@@ -108,6 +129,12 @@ function filtrar() {
   if (termo) {
     lista = lista.filter(l =>
       l[0]?.includes(termo) || l[14]?.includes(termo)
+    );
+  }
+
+  if (situacaoSelecionada) {
+    lista = lista.filter(l =>
+      normalizar(l[26]) === normalizar(situacaoSelecionada)
     );
   }
 
@@ -127,10 +154,20 @@ function agruparPorNota(lista) {
 /* ================= RENDER ================= */
 function renderizar(lista) {
   resultado.innerHTML = "";
-  const grupos = agruparPorNota(lista);
+
+  let grupos = agruparPorNota(lista);
+
+  // 🔒 ORDEM FIXA: MAIS RECENTE PRIMEIRO
+  grupos.sort((a, b) => {
+    const dataA = Math.max(...a.map(i => parseDataBR(i[5])));
+    const dataB = Math.max(...b.map(i => parseDataBR(i[5])));
+    return dataB - dataA;
+  });
+
   contador.innerText = `${grupos.length} envio(s)`;
 
-  painelTabela.innerHTML = gerarTabelaSituacao(lista);
+  painelGrafico.innerHTML = gerarGraficoSituacao(dadosVendedora);
+  atualizarSelecaoGrafico();
 
   grupos.forEach(grupo => {
     const l = grupo[0];
@@ -145,18 +182,75 @@ function renderizar(lista) {
       <strong>Situação:</strong> ${l[25]}<br>
       <strong>Itens:</strong> ${grupo.length}
     `;
+
     resultado.appendChild(card);
   });
 }
 
-/* ================= TABELA ================= */
-function gerarTabelaSituacao(lista) {
+/* ================= GRÁFICO CLICK ================= */
+painelGrafico.addEventListener("click", e => {
+  const linha = e.target.closest(".grafico-linha");
+  if (!linha) return;
+
+  const situacao = linha.dataset.situacao;
+  situacaoSelecionada =
+    situacaoSelecionada === situacao ? null : situacao;
+
+  atualizarSelecaoGrafico();
+  filtrar();
+});
+
+function atualizarSelecaoGrafico() {
+  document.querySelectorAll(".grafico-linha").forEach(linha => {
+    const s = linha.dataset.situacao;
+    linha.classList.toggle(
+      "grafico-ativo",
+      normalizar(situacaoSelecionada) === normalizar(s)
+    );
+  });
+}
+
+/* ================= GRÁFICO ================= */
+function gerarGraficoSituacao(listaBase) {
   const mapa = {};
-  lista.forEach(l => mapa[l[25]] = (mapa[l[25]] || 0) + 1);
+
+  listaBase.forEach(l => {
+    const situacao = l[26];
+    const nota = l[0];
+    if (!situacao) return;
+    if (!mapa[situacao]) mapa[situacao] = new Set();
+    mapa[situacao].add(nota);
+  });
+
+  const limite = 600;
+
+  const entries = Object.entries(mapa)
+    .sort((a, b) => b[1].size - a[1].size);
 
   return `
-    <strong>Situação dos pedidos</strong><br>
-    ${Object.entries(mapa).map(([s, q]) => `${s}: ${q}`).join("<br>")}
+    <strong>Gráfico de Situações</strong><br><br>
+    <div class="grafico">
+      ${entries.map(([s, setNotas]) => {
+        const q = setNotas.size;
+        const pct = Math.min((q / limite) * 100, 100);
+        const ativo =
+          normalizar(situacaoSelecionada) === normalizar(s);
+
+        return `
+          <div 
+            class="grafico-linha ${ativo ? "grafico-ativo" : ""}"
+            data-situacao="${s}"
+            data-tooltip="Situação: ${s} • ${q} envio(s)"
+          >
+            <div class="grafico-label">${s}</div>
+            <div class="grafico-barra-bg">
+              <div class="grafico-barra" style="width:${pct}%"></div>
+            </div>
+            <div class="grafico-valor">${q}</div>
+          </div>
+        `;
+      }).join("")}
+    </div>
   `;
 }
 
@@ -166,41 +260,38 @@ function abrirDetalhes(grupo) {
   const rastreio = l[1] || "Não informado";
 
   conteudoDetalhes.innerHTML = `
-    <h3>Detalhes da Nota</h3>
+    <div class="detalhes-centro">
+      <h3>Detalhes da Nota</h3>
 
-    <div class="linha-dupla">
-      <span><strong>Nota:</strong> ${l[0]}</span>
-      <span><strong>Pedido:</strong> ${l[14]}</span>
+      <div class="linha-dupla">
+        <span><strong>Nota Fiscal:</strong> ${l[0]}</span>
+        <span><strong>Pedido:</strong> ${l[14]}</span>
+      </div>
+
+      <div class="linha-rastreio-central">
+        <strong>Rastreio:</strong>
+        <span>${rastreio}</span>
+        ${rastreio !== "Não informado"
+          ? `<button onclick="rastrearCorreios('${rastreio}')">📦 Rastrear</button>`
+          : ""}
+      </div>
+
+      <p><strong>Cliente:</strong> ${l[7]}</p>
+      <p><strong>Situação:</strong> ${l[25]}</p>
+
+      <div class="linha-dupla">
+        <span><strong>Postagem:</strong> ${l[5] || "-"}</span>
+        <span><strong>Prazo:</strong> ${l[13] || "-"}</span>
+      </div>
+
+      <hr>
+
+      <ul class="lista-itens">
+        ${grupo.map(i => `
+          <li>${i[16]} - ${i[17]} - ${i[15]}</li>
+        `).join("")}
+      </ul>
     </div>
-
-    <p class="linha-rastreio">
-      <strong>Rastreio:</strong>
-      <span class="rastreio-link" onclick="abrirRastreio('${rastreio}')">
-        ${rastreio}
-      </span>
-      ${rastreio !== "Não informado"
-      ? `<button class="btn-copiar" onclick="copiarRastreio('${rastreio}')">📋</button>
-           <button class="btn-rastrear" onclick="abrirRastreio('${rastreio}')">📦</button>`
-      : ""
-    }
-    </p>
-
-    <p><strong>Cliente:</strong> ${l[7]}</p>
-    <p><strong>Situação:</strong> ${l[25]}</p>
-
-    <div class="linha-dupla">
-      <span><strong>Postagem:</strong> ${l[5] || "-"}</span>
-      <span><strong>Prazo:</strong> ${l[13] || "-"}</span>
-    </div>
-
-    <hr>
-
-    <strong>Itens da nota:</strong>
-    <ul class="lista-itens">
-      ${grupo.map(i =>
-      `<li>${i[16]} - ${i[17]} - ${i[15]}</li>`
-    ).join("")}
-    </ul>
   `;
 
   overlay.classList.add("show");
@@ -226,95 +317,35 @@ document.addEventListener("keydown", e => {
 });
 
 /* ================= RASTREIO ================= */
-function abrirDetalhes(grupo) {
-  const l = grupo[0];
-  const rastreio = l[1] || "Não informado";
-
-  conteudoDetalhes.innerHTML = `
-    <div class="detalhes-centro">
-
-      <h3>Detalhes da Nota</h3>
-
-      <div class="linha-dupla">
-        <span><strong>Nota Fiscal:</strong> ${l[0]}</span>
-        <span><strong>Pedido:</strong> ${l[14]}</span>
-      </div>
-
-      <div class="linha-rastreio-central">
-        <strong>Rastreio:</strong>
-        <span class="codigo-rastreio">${rastreio}</span>
-
-        ${rastreio !== "Não informado"
-      ? `
-              <button class="btn-rastrear-unico"
-                onclick="rastrearCorreios('${rastreio}')">
-                📦 Rastrear
-              </button>
-            `
-      : ""
-    }
-      </div>
-
-      <p class="linha-simples">
-        <strong>Cliente:</strong> ${l[7]}
-      </p>
-
-      <p class="linha-simples">
-        <strong>Situação:</strong> ${l[25]}
-      </p>
-
-      <div class="linha-dupla">
-        <span><strong>Postagem:</strong> ${l[5] || "-"}</span>
-        <span><strong>Prazo:</strong> ${l[13] || "-"}</span>
-      </div>
-
-      <hr>
-
-      <strong>Itens da nota:</strong>
-      <ul class="lista-itens">
-        ${grupo.map(i => `
-          <li>
-            ${i[16]} - ${i[17]} - ${i[15]}
-          </li>
-        `).join("")}
-      </ul>
-
-    </div>
-  `;
-
-  overlay.classList.add("show");
-  overlay.classList.remove("oculto");
-  travarScroll();
-}
-
-
-function copiarRastreio(codigo) {
-  navigator.clipboard.writeText(codigo).then(() => {
-    mostrarToast("📋 Código copiado!");
-  });
-}
-
-/* ================= TOAST ================= */
-function mostrarToast(msg) {
-  const toast = document.createElement("div");
-  toast.className = "toast";
-  toast.innerText = msg;
-  document.body.appendChild(toast);
-
-  setTimeout(() => toast.classList.add("show"), 10);
-  setTimeout(() => {
-    toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 300);
-  }, 2000);
-}
-
 function rastrearCorreios(codigo) {
-  if (!codigo) return;
-
-  // Copia o código
   navigator.clipboard.writeText(codigo);
-
-  // Abre site dos Correios com o rastreio
-  const url = `https://rastreamento.correios.com.br/app/index.php?objetos=${codigo}`;
-  window.open(url, "_blank");
+  window.open(
+    `https://rastreamento.correios.com.br/app/index.php?objetos=${codigo}`,
+    "_blank"
+  );
 }
+
+/* ================= TROCAR VENDEDOR ================= */
+trocarVendedor.addEventListener("click", () => {
+  dadosVendedora = [];
+  situacaoSelecionada = null;
+
+  codigoVendedor.value = "";
+  campoBusca.value = "";
+  contador.innerText = "";
+  boasVindas.innerHTML = "";
+  resultado.innerHTML = "";
+  painelGrafico.innerHTML = "";
+
+  campoBusca.disabled = true;
+
+  sistema.classList.add("oculto");
+  trocarVendedor.classList.add("oculto");
+  document.getElementById("boxFiltros").classList.add("oculto");
+
+  document.body.classList.remove("tema-luara", "tema-quatrok");
+  logoMarca.src = "Logo - Grupo 4k - Branco.png";
+
+  loginBox.classList.remove("oculto");
+  codigoVendedor.focus();
+});

@@ -630,3 +630,90 @@ body:not(.tema-quatrok):not(.tema-luara) {
     font-size: 13px;
   }
 }
+
+/* ===== AJUSTES FINOS MOBILE – APÓS LOGIN ===== */
+@media (max-width: 768px) {
+
+  /* ===== TOPO ===== */
+  .topo {
+    padding: 20px 16px 26px;
+    border-radius: 0 0 28px 28px;
+  }
+
+  .topo h1 {
+    font-size: 22px;
+    line-height: 1.2;
+    text-align: left;
+  }
+
+  .topo .logo {
+    max-width: 110px;
+  }
+
+  /* ===== CARD DO VENDEDOR ===== */
+  .box-busca {
+    margin-top: -20px;
+    padding: 24px 20px;
+  }
+
+  .boas-vindas {
+    font-size: 15px;
+    margin-bottom: 14px;
+  }
+
+  /* ===== BOTÃO TROCAR VENDEDOR ===== */
+  .trocar-vendedor {
+    margin-top: 16px;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  /* ===== PAINEL DO GRÁFICO ===== */
+  #painelGrafico {
+    margin-top: 26px;
+    padding: 22px 18px;
+  }
+
+  #painelGrafico strong {
+    font-size: 18px;
+    text-align: center;
+  }
+
+  /* ===== LINHAS DO GRÁFICO ===== */
+  .grafico-linha {
+    grid-template-columns: auto 1fr auto;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .grafico-label {
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .grafico-barra-bg {
+    height: 14px;
+    border-radius: 8px;
+  }
+
+  .grafico-barra {
+    height: 100%;
+    border-radius: 8px;
+  }
+
+  .grafico-valor {
+    font-size: 13px;
+    min-width: 28px;
+    text-align: right;
+  }
+
+  /* ===== RESULTADOS ===== */
+  #resultado {
+    margin-top: 26px;
+    padding-bottom: 30px;
+  }
+
+  .card {
+    border-radius: 18px;
+  }
+}

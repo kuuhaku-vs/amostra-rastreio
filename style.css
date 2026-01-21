@@ -487,10 +487,29 @@ body:not(.tema-quatrok):not(.tema-luara) {
   background: #4b464693; /* cinza claro */
 }
 
-/* ================= LOGIN MOBILE ================= */
+/* ================= MOBILE – LOGIN + SISTEMA ================= */
 @media (max-width: 768px) {
 
-  /* container do login */
+  /* ===== CONTAINER GERAL ===== */
+  .container {
+    padding: 30px 16px;
+  }
+
+  /* ===== TOPO ===== */
+  .topo {
+    padding: 14px 10px;
+  }
+
+  .topo h1 {
+    font-size: 18px;
+  }
+
+  .topo .logo {
+    max-width: 120px;
+    height: auto;
+  }
+
+  /* ===== LOGIN ===== */
   #loginVendedor {
     width: 100%;
     margin-top: 30px;
@@ -499,41 +518,115 @@ body:not(.tema-quatrok):not(.tema-luara) {
     background: rgba(60, 60, 60, 0.94);
   }
 
-  /* título */
   #loginVendedor h3 {
     font-size: 18px;
     margin-bottom: 16px;
   }
 
-  /* input */
   #codigoVendedor {
     width: 100%;
-    max-width: 100%;
     font-size: 15px;
     padding: 14px;
   }
 
-  /* botão */
   #btnLoginVendedor {
     width: 100%;
     padding: 14px;
     font-size: 15px;
   }
 
-  /* erro */
-  #erroLogin {
+  /* ===== BOX FILTROS (APÓS LOGIN) ===== */
+  .box-busca {
+    width: 100%;
+    padding: 26px 20px;
+    border-radius: 16px;
+  }
+
+  .boas-vindas {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  #filtroBusca {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .contador {
     font-size: 13px;
   }
 
-  /* logo no topo */
-  .topo .logo {
-    max-width: 120px;
-    height: auto;
+  /* ===== BOTÃO TROCAR VENDEDOR ===== */
+  .trocar-vendedor {
+    width: 100%;
+    margin-top: 12px;
+    font-size: 14px;
   }
 
-  /* espaçamento geral */
-  .container {
-    padding-top: 30px;
+  /* ===== GRÁFICO ===== */
+  #painelGrafico {
+    width: 100%;
+    height: auto;
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 16px;
+    font-size: 16px;
+  }
+
+  #painelGrafico strong {
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+
+  .grafico-linha {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .grafico-label {
+    font-size: 13px;
+  }
+
+  .grafico-barra-bg {
+    width: 100%;
+  }
+
+  .grafico-valor {
+    align-self: flex-end;
+    font-size: 12px;
+  }
+
+  /* ===== RESULTADOS ===== */
+  #resultado {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0;
+  }
+
+  .card {
+    padding: 16px;
+    font-size: 14px;
+  }
+
+  /* ===== DETALHES (OVERLAY) ===== */
+  .painel-detalhes {
+    width: 92%;
+    padding: 40px 16px 24px;
+    border-radius: 16px;
+  }
+
+  .linha-dupla {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .linha-dupla span {
+    max-width: 100%;
+  }
+
+  .linha-rastreio-central {
+    font-size: 13px;
   }
 }
-

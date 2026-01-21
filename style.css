@@ -486,3 +486,54 @@ body {
 body:not(.tema-quatrok):not(.tema-luara) {
   background: #4b464693; /* cinza claro */
 }
+
+/* ================= LOGIN MOBILE ================= */
+@media (max-width: 768px) {
+
+  /* container do login */
+  #loginVendedor {
+    width: 100%;
+    margin-top: 30px;
+    padding: 30px 20px;
+    border-radius: 16px;
+    background: rgba(60, 60, 60, 0.94);
+  }
+
+  /* título */
+  #loginVendedor h3 {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  /* input */
+  #codigoVendedor {
+    width: 100%;
+    max-width: 100%;
+    font-size: 15px;
+    padding: 14px;
+  }
+
+  /* botão */
+  #btnLoginVendedor {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+  }
+
+  /* erro */
+  #erroLogin {
+    font-size: 13px;
+  }
+
+  /* logo no topo */
+  .topo .logo {
+    max-width: 120px;
+    height: auto;
+  }
+
+  /* espaçamento geral */
+  .container {
+    padding-top: 30px;
+  }
+}
+

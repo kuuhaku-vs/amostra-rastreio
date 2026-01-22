@@ -21,6 +21,9 @@ body.tema-luara {
   --cor-primaria: #c2185b;
   --cor-secundaria: #f06292;
   --cor-barra: linear-gradient(90deg, #ec407a, #f48fb1);
+  width: 100%;
+  transition: opacity 0.25s ease;
+
 }
 
 /* fundo geral */
@@ -40,10 +43,10 @@ body {
   border-radius: 0 0 15px 15px;
 }
 
-/* Tamanho da logo geral */
+/* Tamanho da logo geral animal */
 
 .logo {
-  width: 120px;
+  width: 200px;
   transition: opacity 0.25s ease;
 }
 
@@ -54,6 +57,7 @@ body {
   align-items: center;
   padding: 50px 20px;
   text-align: center;
+  
 }
 
 /* ================= SISTEMA ================= */
@@ -76,7 +80,7 @@ body {
 
 /* ================= BOX BUSCA ================= */
 .box-busca {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(90, 26, 26, 0.18);
   padding: 80px;
   border-radius: 18px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, .3);
@@ -85,6 +89,25 @@ body {
   gap: 12px;
   min-width: 420px;
   position: relative;
+  margin-top: -40px !important;
+}
+
+/* LOGO DA MARCA DENTRO DO BOX-BUSCA */
+.logo-marca-box {
+  display: block;
+  margin: 0 auto 18px auto;
+  max-width: max-content;
+  width: 50%;
+  height: 100%;
+  opacity: 0.95;
+  margin-top: -20px;
+}
+
+@media (max-width: 768px) {
+  .logo-marca-box {
+    max-width: 140px;
+    margin-bottom: 14px;
+  }
 }
 
 /* ================= LOGIN ================= */
@@ -106,7 +129,7 @@ body {
   width: 250px;
   padding: 12px;
   border-radius: 8px;
-  border: 3px solid #4d7fe2;
+  border: 3px solid #ffffff;
   font-size: 14px;
   text-align: center;
 }
@@ -121,6 +144,8 @@ body {
   background-color: #6b6b6b;
   color: #fff;
   cursor: pointer;
+  margin-top: 25px;
+  margin-bottom: -20%;
 }
 
 #btnLoginVendedor:hover {
@@ -132,6 +157,8 @@ body {
   font-size: 13px;
   color: #ffeb3b;
 }
+
+
 
 /* ================= BOAS-VINDAS ================= */
 .boas-vindas {
@@ -164,16 +191,21 @@ body {
 /* ================= BOTÃO TROCAR VENDEDOR ================= */
 .trocar-vendedor {
   background: rgba(255, 255, 255, 0.9);
-  border: none;
-  border-radius: 10px;
-  padding: 10px 12px;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 5px 12px;
   font-size: 13px;
   font-weight: bold;
   cursor: pointer;
+  position: relative;
+  top: 60px;
+  left: 50px;
+  width:60%;
 }
 
 .trocar-vendedor:hover {
-  background: #ffffff;
+  background: #00000034;
+  color: white;
 }
 
 /* ================= GRÁFICO ================= */
@@ -185,10 +217,12 @@ body {
   font-size: 20px;
 }
 
+
 .grafico {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 0;
 }
 
 .grafico-linha {
@@ -231,10 +265,14 @@ body {
   text-align: right;
 }
 
+
 .grafico-linha.grafico-ativo {
-  background: rgba(77, 127, 226, 0.18);
-  border-radius: 10px;
-}
+  background: color-mix(in srgb, var(--cor-primaria) 15%, transparent);
+  border-radius: 5px;
+  border-left: 10px solid var(--cor-primaria);
+ }
+
+
 
 .grafico-linha.grafico-ativo .grafico-label {
   font-weight: bold;
@@ -382,6 +420,37 @@ body {
   font-size: 14px;
 }
 
+/* ================= SCROLL CONDICIONAL - DETALHES ================= */
+
+.lista-itens {
+  margin: 0;
+  padding-left: 18px;
+}
+
+/* Só ativa se tiver mais de 10 itens */
+.lista-itens.lista-scroll {
+  max-height: 260px;
+  /* altura visível */
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+/* Scroll discreto */
+.lista-itens.lista-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lista-itens.lista-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .lista-itens.lista-scroll {
+    max-height: 200px;
+  }
+}
+
 /* ================= CARD DO GRÁFICO ================= */
 
 #painelGrafico {
@@ -437,7 +506,7 @@ body {
 /* barra */
 .grafico-barra {
   height: 100%;
-  background: linear-gradient(90deg, #5b6dff, #7a8cff);
+  background: var(--cor-barra);
   border-radius: 999px;
   transition: width 0.3s ease;
 }
@@ -456,8 +525,17 @@ body {
 
 /* ativo (quando filtra) */
 .grafico-ativo .grafico-barra {
-  background: linear-gradient(90deg, #1f3cff, #4f6cff);
+  filter: brightness(1.15);
 }
+
+body.tema-luara .grafico-barra-bg {
+  background: rgba(236, 64, 122, 0.25);
+}
+
+body.tema-quatrok .grafico-barra-bg {
+  background: rgba(77, 127, 226, 0.25);
+}
+
 
 /* tooltip simples */
 .grafico-linha::after {
@@ -510,6 +588,14 @@ body:not(.tema-quatrok):not(.tema-luara) {
   }
 
   /* ===== LOGIN ===== */
+  .logo-login {
+  display: block;
+  margin: 0 auto 18px auto;
+  max-width: 140px;
+  height: auto;
+}
+
+
   #loginVendedor {
     width: 100%;
     margin-top: 30px;
@@ -631,89 +717,152 @@ body:not(.tema-quatrok):not(.tema-luara) {
   }
 }
 
-/* ===== AJUSTES FINOS MOBILE – APÓS LOGIN ===== */
+/* ================= AJUDA CENTRALIZADA NO LOGIN ================= */
+.ajuda-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.btn-ajuda {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #6b6b6b; /*altera o fundo do botão */
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 15px;
+  width: 50px;
+  height: 50px; /* Define uma altura exata */
+  overflow: hidden; /* Opcional: esconde o conteúdo que passar da altura */
+}
+
+.btn-ajuda:hover {
+  background-color: #fdfcfc4d;
+}
+
+.icone-suporte {
+  width: 35px;
+  height: 40px;
+  object-fit: contain;
+}
+
+/* ================= MODO BUSCA – LAYOUT LATERAL ================= */
+
+body.modo-busca .topo-layout {
+  grid-template-columns: 420px 1fr;
+  align-items: flex-start;
+}
+
+/* gráfico vai para a direita */
+body.modo-busca #painelGrafico {
+  margin-top: -40px;
+  align-self: stretch;
+}
+
+/* quando NÃO está buscando, gráfico centralizado em cima */
+body:not(.modo-busca) #painelGrafico {
+  margin-top: 10px 0 0;
+}
+
+/* gráfico vai para a direita */
+body.modo-busca #resultado {
+  margin-top: -200px;
+  margin-left: 650px;
+  align-self: flex-start;
+}
+
+/* ================= MOBILE – MODO BUSCA ================= */
 @media (max-width: 768px) {
 
-  /* ===== TOPO ===== */
-  .topo {
-    padding: 20px 16px 26px;
-    border-radius: 0 0 28px 28px;
+  /* layout vira coluna */
+  body.modo-busca .topo-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
   }
 
-  .topo h1 {
-    font-size: 22px;
-    line-height: 1.2;
-    text-align: left;
+  /* CARD – vem primeiro */
+  body.modo-busca #resultado {
+    order: 1;
+    margin: auto;
+    width: 100%;
+    align-self: auto;
   }
 
-  .topo .logo {
-    max-width: 110px;
+  /* GRÁFICO – vem depois */
+  body.modo-busca #painelGrafico {
+    order: 2;
+    margin: auto;
+    margin-top: -20px !important;
+    width: 50%;
+    max-height: 500px;
   }
 
-  /* ===== CARD DO VENDEDOR ===== */
-  .box-busca {
-    margin-top: -20px;
-    padding: 24px 20px;
-  }
-
-  .boas-vindas {
-    font-size: 15px;
-    margin-bottom: 14px;
-  }
-
-  /* ===== BOTÃO TROCAR VENDEDOR ===== */
-  .trocar-vendedor {
-    margin-top: 16px;
-    padding: 12px;
-    font-size: 14px;
-  }
-
-  /* ===== PAINEL DO GRÁFICO ===== */
-  #painelGrafico {
-    margin-top: 26px;
-    padding: 22px 18px;
-  }
-
-  #painelGrafico strong {
-    font-size: 18px;
-    text-align: center;
-  }
-
-  /* ===== LINHAS DO GRÁFICO ===== */
-  .grafico-linha {
-    grid-template-columns: auto 1fr auto;
-    gap: 10px;
-    align-items: center;
-  }
-
-  .grafico-label {
-    font-size: 14px;
-    white-space: nowrap;
-  }
-
-  .grafico-barra-bg {
-    height: 14px;
-    border-radius: 8px;
-  }
-
-  .grafico-barra {
-    height: 100%;
-    border-radius: 8px;
-  }
-
-  .grafico-valor {
-    font-size: 13px;
-    min-width: 28px;
-    text-align: right;
-  }
-
-  /* ===== RESULTADOS ===== */
-  #resultado {
-    margin-top: 26px;
-    padding-bottom: 30px;
-  }
-
-  .card {
-    border-radius: 18px;
-  }
 }
+
+/* ================= CORREÇÃO DEFINITIVA LOGIN ================= */
+
+/* o login NÃO deve herdar layout da box-busca */
+#loginVendedor {
+  margin-top: 40px !important;
+  padding: 40px 30px !important;
+  min-width: unset !important;
+  max-width: 520px;
+  width: 100%;
+  background: rgba(60, 60, 60, 0.92);
+  border-radius: 18px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+/* remove hacks antigos */
+#loginVendedor .box-busca {
+  margin-top: 0 !important;
+}
+
+/* botão sem gambiarra */
+#btnLoginVendedor {
+  margin-bottom: 0 !important;
+  margin-top: 20px;
+}
+
+.grafico-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+/* Botão do filtro */
+#limparFiltroGrafico {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;   /* área de clique */
+  height: 22px;
+  cursor: pointer;
+  color: #9e9e9e;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* TAMANHO DO ÍCONE */
+#limparFiltroGrafico svg {
+  width: 30px;   /* 👈 ajuste aqui */
+  height: 30px;
+}
+
+/* Hover */
+#limparFiltroGrafico:hover {
+  color: #ff1744;
+  transform: scale(1.1);
+}
+
+
+
+

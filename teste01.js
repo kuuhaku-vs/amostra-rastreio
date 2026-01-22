@@ -14,18 +14,17 @@ const codigoVendedor = document.getElementById("codigoVendedor");
 const btnLogin = document.getElementById("btnLoginVendedor");
 const erroLogin = document.getElementById("erroLogin");
 const logoMarca = document.getElementById("logoMarca");
-
 const sistema = document.getElementById("sistema");
 const trocarVendedor = document.getElementById("trocarVendedor");
-
 const campoBusca = document.getElementById("filtroBusca");
 const resultado = document.getElementById("resultado");
 const painelGrafico = document.getElementById("painelGrafico");
 const contador = document.getElementById("contador");
 const boasVindas = document.getElementById("boasVindas");
-
 const overlay = document.getElementById("overlayDetalhes");
 const conteudoDetalhes = document.getElementById("conteudoDetalhes");
+
+const btnAjudaSuporte = document.getElementById("btnAjudaSuporte");
 
 /* ================= UTIL ================= */
 function saudacaoPorHorario() {
@@ -91,6 +90,8 @@ function validarCodigo() {
   loginBox.classList.add("oculto");
   sistema.classList.remove("oculto");
   trocarVendedor.classList.remove("oculto");
+  btnAjudaSuporte.classList.add("oculto");
+
 
   document.getElementById("boxFiltros").classList.remove("oculto");
   campoBusca.disabled = false;
@@ -108,19 +109,31 @@ function validarCodigo() {
 
   document.body.classList.remove("tema-luara", "tema-quatrok");
 
-  if (marca === "LUARA") {
-    document.body.classList.add("tema-luara");
-    logoMarca.src = "luara branco.png";
-  } else {
-    document.body.classList.add("tema-quatrok");
-    logoMarca.src = "4k BRANCO.png";
-  }
+ const logoMarcaBox = document.getElementById("logoMarcaBox");
+
+if (marca === "LUARA") {
+  document.body.classList.add("tema-luara");
+  logoMarca.src = "luara branco.png";
+  logoMarcaBox.src = "luara branco.png";
+} else {
+  document.body.classList.add("tema-quatrok");
+  logoMarca.src = "4k BRANCO.png";
+  logoMarcaBox.src = "4k BRANCO.png";
+}
+
 
   filtrar();
 }
 
 /* ================= FILTRO ================= */
-campoBusca.oninput = filtrar;
+campoBusca.oninput = () => {
+  const temBusca = campoBusca.value.trim().length > 5;
+
+  document.body.classList.toggle("modo-busca", temBusca);
+
+  filtrar();
+};
+
 
 function filtrar() {
   let lista = [...dadosVendedora];
@@ -192,6 +205,10 @@ painelGrafico.addEventListener("click", e => {
   const linha = e.target.closest(".grafico-linha");
   if (!linha) return;
 
+  // ✅ LIMPA O INPUT DE NOTA FISCAL
+  campoBusca.value = "";
+  document.body.classList.remove("modo-busca");
+
   const situacao = linha.dataset.situacao;
   situacaoSelecionada =
     situacaoSelecionada === situacao ? null : situacao;
@@ -199,6 +216,7 @@ painelGrafico.addEventListener("click", e => {
   atualizarSelecaoGrafico();
   filtrar();
 });
+
 
 function atualizarSelecaoGrafico() {
   document.querySelectorAll(".grafico-linha").forEach(linha => {
@@ -214,50 +232,94 @@ function atualizarSelecaoGrafico() {
 function gerarGraficoSituacao(listaBase) {
   const mapa = {};
 
+  // agrupa por situação e nota única
   listaBase.forEach(l => {
     const situacao = l[26];
     const nota = l[0];
     if (!situacao) return;
+
     if (!mapa[situacao]) mapa[situacao] = new Set();
     mapa[situacao].add(nota);
   });
 
-  const limite = 600;
+  // 👉 TOTAL REAL DE PEDIDOS (somando todas as notas únicas)
+  const totalPedidos = Object.values(mapa)
+    .reduce((acc, setNotas) => acc + setNotas.size, 0);
 
   const entries = Object.entries(mapa)
     .sort((a, b) => b[1].size - a[1].size);
 
   return `
-    <strong>Gráfico de Situações</strong><br><br>
-    <div class="grafico">
-      ${entries.map(([s, setNotas]) => {
-        const q = setNotas.size;
-        const pct = Math.min((q / limite) * 100, 100);
-        const ativo =
-          normalizar(situacaoSelecionada) === normalizar(s);
+  <div class="grafico-header">
+  <strong>Gráfico de Situações</strong>
 
-        return `
-          <div 
-            class="grafico-linha ${ativo ? "grafico-ativo" : ""}"
-            data-situacao="${s}"
-            data-tooltip="Situação: ${s} • ${q} envio(s)"
-          >
-            <div class="grafico-label">${s}</div>
-            <div class="grafico-barra-bg">
-              <div class="grafico-barra" style="width:${pct}%"></div>
-            </div>
-            <div class="grafico-valor">${q}</div>
+  ${
+    situacaoSelecionada
+      ? `
+        <span id="limparFiltroGrafico" title="Limpar filtro">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <!-- Funil -->
+    <path
+      d="M3 5h18l-7 8v5l-4 2v-7L3 5z"
+      fill="currentColor"/>
+
+    <!-- X (limpar) -->
+    <path
+      d="M15.5 9.5l4 4m0-4l-4 4"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"/>
+  </svg>
+</span>
+
+      `
+      : ""
+  }
+</div>
+
+
+  <div class="grafico">
+    ${entries.map(([s, setNotas]) => {
+      const q = setNotas.size;
+      const pct = totalPedidos ? (q / totalPedidos) * 100 : 0;
+
+      const ativo =
+        normalizar(situacaoSelecionada) === normalizar(s);
+
+      return `
+        <div 
+          class="grafico-linha ${ativo ? "grafico-ativo" : ""}"
+          data-situacao="${s}"
+          data-tooltip="Situação: ${s} • ${q} envio(s)"
+        >
+          <div class="grafico-label">${s}</div>
+          <div class="grafico-barra-bg">
+            <div class="grafico-barra" style="width:${pct}%"></div>
           </div>
-        `;
-      }).join("")}
-    </div>
-  `;
+          <div class="grafico-valor">${q}</div>
+        </div>
+      `;
+    }).join("")}
+  </div>
+`;
+
 }
+
+painelGrafico.addEventListener("click", e => {
+  if (e.target.closest("#limparFiltroGrafico")) {
+    situacaoSelecionada = null;
+    atualizarSelecaoGrafico();
+    filtrar();
+  }
+});
+
+
 
 /* ================= DETALHES ================= */
 function abrirDetalhes(grupo) {
   const l = grupo[0];
   const rastreio = l[1] || "Não informado";
+  const temScroll = grupo.length > 10;
 
   conteudoDetalhes.innerHTML = `
     <div class="detalhes-centro">
@@ -286,11 +348,12 @@ function abrirDetalhes(grupo) {
 
       <hr>
 
-      <ul class="lista-itens">
-        ${grupo.map(i => `
-          <li>${i[16]} - ${i[17]} - ${i[15]}</li>
-        `).join("")}
-      </ul>
+      <ul class="lista-itens ${temScroll ? "lista-scroll" : ""}">
+  ${grupo.map(i => `
+    <li>${i[16]} - ${i[17]} - ${i[15]}</li>
+  `).join("")}
+</ul>
+
     </div>
   `;
 
@@ -348,5 +411,32 @@ trocarVendedor.addEventListener("click", () => {
 
   loginBox.classList.remove("oculto");
   codigoVendedor.focus();
+  btnAjudaSuporte.classList.remove("oculto");
+  document.getElementById("logoMarcaBox").src = "";
+  document.body.classList.remove("modo-busca");
+
 });
+
+/* ================= AJUDA & SUPORTE ================= */
+const menuAjuda = document.getElementById("menuAjuda");
+const btnAjuda = document.getElementById("btnAjudaSuporte");
+const ajudaChat = document.getElementById("ajudaChat");
+const ajudaEmail = document.getElementById("ajudaEmail");
+
+
+
+
+btnAjudaSuporte.addEventListener("click", () => {
+  window.open(
+    "https://mail.google.com/mail/u/0/?view=cm&fs=1&to=amostra024k@gmail.com&su=Login%20-%20Rastreamento%20de%20Amostras",
+    "_blank"
+  );
+  menuAjuda.classList.add("oculto");
+});
+
+/* fecha o menu ao clicar fora */
+document.addEventListener("click", () => {
+  menuAjuda.classList.add("oculto");
+});
+
 

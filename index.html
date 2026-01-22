@@ -29,19 +29,20 @@
   </div>
 
   <!-- ================= TOPO ================= -->
-  <header class="topo">
-    <img id="logoMarca" src="Logo - Grupo 4k - Branco.png" class="logo" alt="Logo da empresa" />
-
-    <h1>Rastreamento de Amostras</h1>
-  </header>
-
+  
+  
   <!-- ================= CONTEÚDO ================= -->
   <main class="container">
 
     <!-- ================= LOGIN ================= -->
-    <section id="loginVendedor" class="box-busca">
-      <h3 style="text-align:center;color:white;">Login do Vendedor</h3>
 
+    
+    <section id="loginVendedor" class="box-busca">
+      <header class="topo">
+        <img id="logoMarca" src="Logo - Grupo 4k - Branco.png" class="logo" alt="Logo da empresa" />
+      </header>
+      <h3 style="text-align:center;color:white;">Login do Vendedor</h3>
+      
       <input
         id="codigoVendedor"
         type="text"
@@ -53,6 +54,15 @@
       <div id="erroLogin" style="color:#ffeb3b;text-align:center;font-size:13px;"></div>
     </section>
 
+    <div class="ajuda-wrapper">
+  <abbr title="Ajuda">
+  <button id="btnAjudaSuporte" class="btn-ajuda"> 
+  <img src="iconesuporte.png" alt="Ajuda e Suporte" class="icone-suporte" />
+  </abbr>
+
+</button>
+
+</div>
     <!-- ================= SISTEMA ================= -->
     <section id="sistema" class="oculto">
 
@@ -62,8 +72,14 @@
         <!-- ================= BUSCA / INFO ================= -->
         <div class="box-busca oculto" id="boxFiltros">
 
-          <!-- BOAS VINDAS (ÁREA VERDE) -->
-          <div id="boasVindas" class="boas-vindas"></div>
+  <img
+    id="logoMarcaBox"
+    class="logo-marca-box"
+    alt="Logo da marca"
+  />
+
+  <div id="boasVindas" class="boas-vindas"></div>
+
 
           <input
             id="filtroBusca"

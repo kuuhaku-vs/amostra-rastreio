@@ -208,6 +208,26 @@ body {
   color: white;
 }
 
+@media (max-width: 768px) {
+  .trocar-vendedor {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  top: 10px;
+  left: 0px;
+  width:60%;
+}
+
+.trocar-vendedor:hover {
+  background: #00000034;
+  color: white;
+}
+}
 /* ================= GRÁFICO ================= */
 #painelGrafico {
   text-align: center;
@@ -862,6 +882,7 @@ body.modo-busca #resultado {
   color: #ff1744;
   transform: scale(1.1);
 }
+
 
 
 

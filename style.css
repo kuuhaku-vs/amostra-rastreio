@@ -849,22 +849,23 @@ body.modo-busca #resultado {
     display: flex;
     flex-direction: row;
     gap: 20px;
+    width: 100%;
   }
 
-  /* CARD – vem primeiro */
+  /* CARD – vem primeiro*/
   body.modo-busca #resultado {
-    order: 1;
     margin: auto;
+    margin-top: 10%;
+    margin-left: 50%;
     width: 100%;
     align-self: auto;
   }
 
   /* GRÁFICO – vem depois */
   body.modo-busca #painelGrafico {
-    order: 2;
-    margin: auto;
-    margin-top: -20px !important;
-    width: 50%;
+    display: flex;
+    margin-top: -40px !important;
+    width: 100%;
     max-height: 500px;
   }
 

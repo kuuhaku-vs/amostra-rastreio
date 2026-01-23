@@ -220,14 +220,16 @@ body {
   position: relative;
   top: 10px;
   left: 0px;
-  width:60%;
+  width: 60%;
 }
 
 .trocar-vendedor:hover {
   background: #00000034;
   color: white;
 }
+ 
 }
+
 /* ================= GRÁFICO ================= */
 #painelGrafico {
   text-align: center;
@@ -319,6 +321,43 @@ body {
   cursor: pointer;
 }
 
+/* ================= STATUS VISUAL NO CARD ================= */
+.card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* barra lateral */
+.card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 100%;
+}
+
+/* ENTREGUE – VERDE */
+.card.entregue::before {
+  background: #4caf50;
+}
+
+/* PENDENTE – AMARELO */
+.card.pendente::before {
+  background: #fbc02d;
+}
+
+/* RETORNADO – VERMELHO */
+.card.retornado::before {
+  background: #e53935;
+}
+
+/* OUTROS */
+.card.outro::before {
+  background: #9e9e9e;
+}
+
+
 /* ================= OVERLAY ================= */
 .overlay {
   position: fixed;
@@ -375,10 +414,9 @@ body {
 /* ================= PAINEL DETALHES (CARDS) ================= */
 .painel-detalhes {
   background: #ffffff;
-  width: 90%;
-  max-width: 520px;
+  width: 600px;
   border-radius: 18px;
-  padding: 60px 20px 30px;
+  padding: 20px 20px 30px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
   position: relative;
   text-align: center;
@@ -394,6 +432,10 @@ body {
   font-size: 22px;
   cursor: pointer;
   color: #444;
+}
+.painel-detalhes .fechar:hover{
+  color: var(--cor-primaria);
+  font-size: 20px bold;
 }
 
 /* ================= CONTEÚDO DETALHES ================= */
@@ -773,13 +815,13 @@ body:not(.tema-quatrok):not(.tema-luara) {
 
 body.modo-busca .topo-layout {
   grid-template-columns: 420px 1fr;
-  align-items: flex-start;
+  align-items: stretch;
 }
 
 /* gráfico vai para a direita */
 body.modo-busca #painelGrafico {
   margin-top: -40px;
-  align-self: stretch;
+  align-self: flex-start;
 }
 
 /* quando NÃO está buscando, gráfico centralizado em cima */
@@ -789,10 +831,15 @@ body:not(.modo-busca) #painelGrafico {
 
 /* gráfico vai para a direita */
 body.modo-busca #resultado {
-  margin-top: -200px;
-  margin-left: 650px;
-  align-self: flex-start;
+  display: grid;
+  margin-top: -150px;
+  margin-left: 1950px; /* sempre centraliza horizontal */
+  transform: translate(-50%, -50%); /* centraliza levando em conta o próprio elemento */
+  width: 100%; /* tamanho fixo, não relativo */
+  
+  z-index: 1000;
 }
+
 
 /* ================= MOBILE – MODO BUSCA ================= */
 @media (max-width: 768px) {
@@ -882,8 +929,4 @@ body.modo-busca #resultado {
   color: #ff1744;
   transform: scale(1.1);
 }
-
-
-
-
 

@@ -34,6 +34,24 @@ function saudacaoPorHorario() {
   return "Boa noite,";
 }
 
+function normalizarTextoOrdenacao(txt) {
+  if (!txt) return "";
+
+  // remove tudo até o terceiro hífen
+  // exemplo: "1 - Pilotagem - PUNHO AP INFINITY BCO 1Q"
+  // vira: "PUNHO AP INFINITY BCO 1Q"
+  const descricao = txt.replace(/^.*?-\s*.*?-\s*/,"");
+
+  return descricao
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toUpperCase();
+}
+
+
+
 function normalizar(v) {
   return v?.toString().trim().toUpperCase();
 }
@@ -185,7 +203,29 @@ function renderizar(lista) {
   grupos.forEach(grupo => {
     const l = grupo[0];
     const card = document.createElement("div");
-    card.className = "card";
+
+    const situacao = normalizar(l[26]);
+
+    let classeStatus = "outro";
+
+    if (situacao.includes("ENTREGUE")) {
+      classeStatus = "entregue";
+    } 
+    else if (situacao.includes("PENDENTE")) {
+      classeStatus = "pendente";
+    } 
+    else if (
+      situacao.includes("RETORN") ||
+      situacao.includes("DEVOL")
+    ) {
+      classeStatus = "retornado";
+    }
+
+card.className = `card ${classeStatus}`;
+
+
+    card.className = `card ${classeStatus}`;
+
     card.onclick = () => abrirDetalhes(grupo);
 
     card.innerHTML = `
@@ -349,10 +389,20 @@ function abrirDetalhes(grupo) {
       <hr>
 
       <ul class="lista-itens ${temScroll ? "lista-scroll" : ""}">
-  ${grupo.map(i => `
-    <li>${i[16]} - ${i[17]} - ${i[15]}</li>
-  `).join("")}
+  ${[...grupo]
+    .sort((a, b) => {
+      const da = normalizarTextoOrdenacao(a[15]);
+      const db = normalizarTextoOrdenacao(b[15]);
+      return da.localeCompare(db, "pt-BR");
+    })
+    .map(i => `
+      <li>${i[16]} - ${i[17]} - ${i[15]}</li>
+    `)
+    .join("")}
 </ul>
+
+
+
 
     </div>
   `;

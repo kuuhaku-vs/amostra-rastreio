@@ -57,7 +57,7 @@ body {
   align-items: center;
   padding: 50px 20px;
   text-align: center;
-  
+
 }
 
 /* ================= SISTEMA ================= */
@@ -200,7 +200,7 @@ body {
   position: relative;
   top: 60px;
   left: 50px;
-  width:60%;
+  width: 60%;
 }
 
 .trocar-vendedor:hover {
@@ -210,24 +210,24 @@ body {
 
 @media (max-width: 768px) {
   .trocar-vendedor {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid white;
-  border-radius: 5px;
-  padding: 5px 12px;
-  font-size: 13px;
-  font-weight: bold;
-  cursor: pointer;
-  position: relative;
-  top: 10px;
-  left: 0px;
-  width: 60%;
-}
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    top: 10px;
+    left: 0px;
+    width: 60%;
+  }
 
-.trocar-vendedor:hover {
-  background: #00000034;
-  color: white;
-}
- 
+  .trocar-vendedor:hover {
+    background: #00000034;
+    color: white;
+  }
+
 }
 
 /* ================= GRÁFICO ================= */
@@ -292,7 +292,7 @@ body {
   background: color-mix(in srgb, var(--cor-primaria) 15%, transparent);
   border-radius: 5px;
   border-left: 10px solid var(--cor-primaria);
- }
+}
 
 
 
@@ -433,7 +433,8 @@ body {
   cursor: pointer;
   color: #444;
 }
-.painel-detalhes .fechar:hover{
+
+.painel-detalhes .fechar:hover {
   color: var(--cor-primaria);
   font-size: 20px bold;
 }
@@ -624,7 +625,8 @@ body.tema-quatrok .grafico-barra-bg {
 
 /* enquanto o sistema estiver oculto (antes do login) */
 body:not(.tema-quatrok):not(.tema-luara) {
-  background: #4b464693; /* cinza claro */
+  background: #4b464693;
+  /* cinza claro */
 }
 
 /* ================= MOBILE – LOGIN + SISTEMA ================= */
@@ -651,11 +653,11 @@ body:not(.tema-quatrok):not(.tema-luara) {
 
   /* ===== LOGIN ===== */
   .logo-login {
-  display: block;
-  margin: 0 auto 18px auto;
-  max-width: 140px;
-  height: auto;
-}
+    display: block;
+    margin: 0 auto 18px auto;
+    max-width: 140px;
+    height: auto;
+  }
 
 
   #loginVendedor {
@@ -792,13 +794,16 @@ body:not(.tema-quatrok):not(.tema-luara) {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: #6b6b6b; /*altera o fundo do botão */
+  background-color: #6b6b6b;
+  /*altera o fundo do botão */
   border-radius: 8px;
   cursor: pointer;
   margin-top: 15px;
   width: 50px;
-  height: 50px; /* Define uma altura exata */
-  overflow: hidden; /* Opcional: esconde o conteúdo que passar da altura */
+  height: 50px;
+  /* Define uma altura exata */
+  overflow: hidden;
+  /* Opcional: esconde o conteúdo que passar da altura */
 }
 
 .btn-ajuda:hover {
@@ -833,10 +838,13 @@ body:not(.modo-busca) #painelGrafico {
 body.modo-busca #resultado {
   display: grid;
   margin-top: -150px;
-  margin-left: 1950px; /* sempre centraliza horizontal */
-  transform: translate(-50%, -50%); /* centraliza levando em conta o próprio elemento */
-  width: 100%; /* tamanho fixo, não relativo */
-  
+  margin-left: 1950px;
+  /* sempre centraliza horizontal */
+  transform: translate(-50%, -50%);
+  /* centraliza levando em conta o próprio elemento */
+  width: 100%;
+  /* tamanho fixo, não relativo */
+
   z-index: 1000;
 }
 
@@ -846,30 +854,37 @@ body.modo-busca #resultado {
 
   /* layout vira coluna */
   body.modo-busca .topo-layout {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    width: 100%;
+      display: contents;
   }
+/* RESULTADOS */
+body.modo-busca #resultado {
+  order: 2;
+  margin: 0;
+  padding: 0;
+}
 
+/* GRÁFICO */
+body.modo-busca #painelGrafico {
+  order: 3;
+  margin: 0;
+  max-height: none;
+}
   /* CARD – vem primeiro*/
-  body.modo-busca #resultado {
-    margin: auto;
-    margin-top: 10%;
-    margin-left: 50%;
-    width: 100%;
-    align-self: auto;
-  }
-
-  /* GRÁFICO – vem depois */
-  body.modo-busca #painelGrafico {
-    display: flex;
-    margin-top: -40px !important;
-    width: 100%;
-    max-height: 500px;
-  }
+    body.modo-busca #resultado,
+    body.modo-busca #painelGrafico {
+      margin-top: 0 !important;
+      margin-left: 0 !important;
+      transform: none !important;
+    }
+    /* ================= pai correto ================= */
+    body.modo-busca #sistema {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
 
 }
+}
+
 
 /* ================= CORREÇÃO DEFINITIVA LOGIN ================= */
 
@@ -912,7 +927,8 @@ body.modo-busca #resultado {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 22px;   /* área de clique */
+  width: 22px;
+  /* área de clique */
   height: 22px;
   cursor: pointer;
   color: #9e9e9e;
@@ -921,7 +937,8 @@ body.modo-busca #resultado {
 
 /* TAMANHO DO ÍCONE */
 #limparFiltroGrafico svg {
-  width: 30px;   /* 👈 ajuste aqui */
+  width: 30px;
+  /* 👈 ajuste aqui */
   height: 30px;
 }
 
@@ -931,3 +948,9 @@ body.modo-busca #resultado {
   transform: scale(1.1);
 }
 
+.linha-rastreio-central button{
+  border-radius: 10px 10px;
+  border: none;
+  background: var(--cor-barra);
+  color: white;
+}

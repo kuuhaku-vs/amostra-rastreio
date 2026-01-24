@@ -7,6 +7,8 @@ let dados = [];
 let dadosVendedora = [];
 let csvCarregado = false;
 let situacaoSelecionada = null;
+let notificacoesLidas = new Set();
+
 
 /* ================= ELEMENTOS ================= */
 const loginBox = document.getElementById("loginVendedor");
@@ -23,6 +25,10 @@ const contador = document.getElementById("contador");
 const boasVindas = document.getElementById("boasVindas");
 const overlay = document.getElementById("overlayDetalhes");
 const conteudoDetalhes = document.getElementById("conteudoDetalhes");
+const btnNotificacoes = document.getElementById("btnNotificacoes");
+const contadorNotificacoes = document.getElementById("contadorNotificacoes");
+const overlayNotificacoes = document.getElementById("overlayNotificacoes");
+const listaNotificacoes = document.getElementById("listaNotificacoes");
 
 const btnAjudaSuporte = document.getElementById("btnAjudaSuporte");
 
@@ -40,7 +46,7 @@ function normalizarTextoOrdenacao(txt) {
   // remove tudo até o terceiro hífen
   // exemplo: "1 - Pilotagem - PUNHO AP INFINITY BCO 1Q"
   // vira: "PUNHO AP INFINITY BCO 1Q"
-  const descricao = txt.replace(/^.*?-\s*.*?-\s*/,"");
+  const descricao = txt.replace(/^.*?-\s*.*?-\s*/, "");
 
   return descricao
     .normalize("NFD")
@@ -127,18 +133,20 @@ function validarCodigo() {
 
   document.body.classList.remove("tema-luara", "tema-quatrok");
 
- const logoMarcaBox = document.getElementById("logoMarcaBox");
+  const logoMarcaBox = document.getElementById("logoMarcaBox");
 
-if (marca === "LUARA") {
-  document.body.classList.add("tema-luara");
-  logoMarca.src = "luara branco.png";
-  logoMarcaBox.src = "luara branco.png";
-} else {
-  document.body.classList.add("tema-quatrok");
-  logoMarca.src = "4k BRANCO.png";
-  logoMarcaBox.src = "4k BRANCO.png";
-}
+  if (marca === "LUARA") {
+    document.body.classList.add("tema-luara");
+    logoMarca.src = "luara branco.png";
+    logoMarcaBox.src = "luara branco.png";
+  } else {
+    document.body.classList.add("tema-quatrok");
+    logoMarca.src = "4k BRANCO.png";
+    logoMarcaBox.src = "4k BRANCO.png";
+  }
 
+  atualizarNotificacoes();
+  btnNotificacoes.classList.remove("oculto");
 
   filtrar();
 }
@@ -210,10 +218,10 @@ function renderizar(lista) {
 
     if (situacao.includes("ENTREGUE")) {
       classeStatus = "entregue";
-    } 
+    }
     else if (situacao.includes("PENDENTE")) {
       classeStatus = "pendente";
-    } 
+    }
     else if (
       situacao.includes("RETORN") ||
       situacao.includes("DEVOL")
@@ -221,7 +229,7 @@ function renderizar(lista) {
       classeStatus = "retornado";
     }
 
-card.className = `card ${classeStatus}`;
+    card.className = `card ${classeStatus}`;
 
 
     card.className = `card ${classeStatus}`;
@@ -293,8 +301,7 @@ function gerarGraficoSituacao(listaBase) {
   <div class="grafico-header">
   <strong>Gráfico de Situações</strong>
 
-  ${
-    situacaoSelecionada
+  ${situacaoSelecionada
       ? `
         <span id="limparFiltroGrafico" title="Limpar filtro">
   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -314,7 +321,7 @@ function gerarGraficoSituacao(listaBase) {
 
       `
       : ""
-  }
+    }
 </div>
 
 
@@ -360,6 +367,8 @@ function abrirDetalhes(grupo) {
   const l = grupo[0];
   const rastreio = l[1] || "Não informado";
   const temScroll = grupo.length > 10;
+  const codigoLoginVendedor = normalizar(codigoVendedor.value);
+  const mostrarRepresentante = codigoLoginVendedor.startsWith("V");
 
   conteudoDetalhes.innerHTML = `
     <div class="detalhes-centro">
@@ -374,11 +383,19 @@ function abrirDetalhes(grupo) {
         <strong>Rastreio:</strong>
         <span>${rastreio}</span>
         ${rastreio !== "Não informado"
-          ? `<button onclick="rastrearCorreios('${rastreio}')">📦 Rastrear</button>`
-          : ""}
+      ? `<button onclick="rastrearCorreios('${rastreio}')">📦 Rastrear</button>`
+      : ""}
       </div>
-
-      <p><strong>Cliente:</strong> ${l[7]}</p>
+      <span><strong>Cliente:</strong> ${l[18]}<span>
+      <span><strong>-</strong> ${l[7]}</span>
+      ${mostrarRepresentante ? `
+      <p>
+      <span><strong>Representante:</strong> ${l[20]}</span>
+      <span><strong> - </strong>${l[21]}</span>
+      </p>
+      ` : ""}
+      <span><strong>Cidade:</strong> ${l[11]}<span>
+      <span><strong>-</strong> ${l[12]}</span>
       <p><strong>Situação:</strong> ${l[25]}</p>
 
       <div class="linha-dupla">
@@ -390,15 +407,15 @@ function abrirDetalhes(grupo) {
 
       <ul class="lista-itens ${temScroll ? "lista-scroll" : ""}">
   ${[...grupo]
-    .sort((a, b) => {
-      const da = normalizarTextoOrdenacao(a[15]);
-      const db = normalizarTextoOrdenacao(b[15]);
-      return da.localeCompare(db, "pt-BR");
-    })
-    .map(i => `
+      .sort((a, b) => {
+        const da = normalizarTextoOrdenacao(a[15]);
+        const db = normalizarTextoOrdenacao(b[15]);
+        return da.localeCompare(db, "pt-BR");
+      })
+      .map(i => `
       <li>${i[16]} - ${i[17]} - ${i[15]}</li>
     `)
-    .join("")}
+      .join("")}
 </ul>
 
 
@@ -406,6 +423,12 @@ function abrirDetalhes(grupo) {
 
     </div>
   `;
+
+  function fecharNotificacoes() {
+  overlayNotificacoes.classList.remove("show");
+  overlayNotificacoes.classList.add("oculto");
+  liberarScroll();
+}
 
   overlay.classList.add("show");
   overlay.classList.remove("oculto");
@@ -418,10 +441,30 @@ function fecharDetalhes() {
   overlay.classList.add("oculto");
   liberarScroll();
 }
+function fecharNotificacoes() {
+  overlayNotificacoes.classList.remove("show");
+  overlayNotificacoes.classList.add("oculto");
+  liberarScroll();
+}
+
 
 overlay.addEventListener("click", e => {
   if (e.target === overlay) fecharDetalhes();
 });
+overlayNotificacoes.addEventListener("click", e => {
+  if (e.target === overlayNotificacoes) {
+    fecharNotificacoes();
+  }
+});
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "Escape" &&
+    overlayNotificacoes.classList.contains("show")
+  ) {
+    fecharNotificacoes();
+  }
+});
+
 
 document.addEventListener("keydown", e => {
   if (e.key === "Escape" && overlay.classList.contains("show")) {
@@ -464,6 +507,10 @@ trocarVendedor.addEventListener("click", () => {
   btnAjudaSuporte.classList.remove("oculto");
   document.getElementById("logoMarcaBox").src = "";
   document.body.classList.remove("modo-busca");
+  btnNotificacoes.classList.add("oculto");
+  contadorNotificacoes.innerText = "0";
+  listaNotificacoes.innerHTML = "";
+
 
 });
 
@@ -484,9 +531,57 @@ btnAjudaSuporte.addEventListener("click", () => {
   menuAjuda.classList.add("oculto");
 });
 
-/* fecha o menu ao clicar fora */
-document.addEventListener("click", () => {
-  menuAjuda.classList.add("oculto");
+btnNotificacoes.addEventListener("click", (e) => {
+  e.stopPropagation();
+
+  overlayNotificacoes.classList.add("show");
+  overlayNotificacoes.classList.remove("oculto");
+  travarScroll();
+  
 });
 
+
+/* Notificações */
+function atualizarNotificacoes() {
+  const pendentes = {};
+
+  dadosVendedora.forEach(l => {
+    if (
+      normalizar(l[26]) ===
+      normalizar("⚠️ Pendente")
+    ) {
+      if (!pendentes[l[0]]) pendentes[l[0]] = [];
+      pendentes[l[0]].push(l);
+    }
+  });
+
+  const grupos = Object.values(pendentes);
+
+  contadorNotificacoes.innerText = grupos.length;
+  btnNotificacoes.classList.toggle("oculto", grupos.length === 0);
+
+  listaNotificacoes.innerHTML = "";
+
+  if (!grupos.length) {
+    listaNotificacoes.innerHTML =
+      "<p style='text-align:center'>Nenhuma notificação no momento.</p>";
+    return;
+  }
+
+  grupos.forEach(grupo => {
+    const l = grupo[0];
+    const div = document.createElement("div");
+    div.className = "notificacao-item";
+    div.innerHTML = `
+      <strong>Nota:</strong> ${l[0]}<br>
+      <strong>Cliente:</strong> ${l[7]}<br>
+      <strong>Situação:</strong> ${l[25]}
+    `;
+    div.onclick = () => {
+      fecharNotificacoes();
+      abrirDetalhes(grupo);
+    };
+    listaNotificacoes.appendChild(div);
+  });
+}
 

@@ -18,9 +18,9 @@ body.tema-quatrok {
 }
 
 body.tema-luara {
-  --cor-primaria: #c2185b;
-  --cor-secundaria: #f06292;
+  --cor-primaria: #7e1740b4;
   --cor-barra: linear-gradient(90deg, #ec407a, #f48fb1);
+
   width: 100%;
   transition: opacity 0.25s ease;
 
@@ -38,7 +38,7 @@ body {
   justify-content: center;
   gap: 15px;
   background: var(--cor-secundaria);
-  color: rgb(255, 254, 254);
+  color: rgb(255 254 254);
   padding: 15px;
   border-radius: 0 0 15px 15px;
 }
@@ -80,10 +80,10 @@ body {
 
 /* ================= BOX BUSCA ================= */
 .box-busca {
-  background: rgba(90, 26, 26, 0.18);
+  background: rgb(90 26 26 / 18%);
   padding: 80px;
   border-radius: 18px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, .3);
+  box-shadow: 0 15px 35px rgb(0 0 0 / 30%);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -95,7 +95,7 @@ body {
 /* LOGO DA MARCA DENTRO DO BOX-BUSCA */
 .logo-marca-box {
   display: block;
-  margin: 0 auto 18px auto;
+  margin: 0 auto 18px;
   max-width: max-content;
   width: 50%;
   height: 100%;
@@ -103,7 +103,7 @@ body {
   margin-top: -20px;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .logo-marca-box {
     max-width: 140px;
     margin-bottom: 14px;
@@ -115,7 +115,7 @@ body {
   align-items: center;
   justify-content: center;
   margin-top: 50px;
-  background: rgba(60, 60, 60, 0.92);
+  background: rgb(60 60 60 / 92%);
 }
 
 /* título */
@@ -129,7 +129,7 @@ body {
   width: 250px;
   padding: 12px;
   border-radius: 8px;
-  border: 3px solid #ffffff;
+  border: 3px solid #fff;
   font-size: 14px;
   text-align: center;
 }
@@ -190,7 +190,7 @@ body {
 
 /* ================= BOTÃO TROCAR VENDEDOR ================= */
 .trocar-vendedor {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgb(255 255 255 / 90%);
   border: 1px solid white;
   border-radius: 5px;
   padding: 5px 12px;
@@ -208,9 +208,9 @@ body {
   color: white;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .trocar-vendedor {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgb(255 255 255 / 90%);
     border: 1px solid white;
     border-radius: 5px;
     padding: 5px 12px;
@@ -219,7 +219,7 @@ body {
     cursor: pointer;
     position: relative;
     top: 10px;
-    left: 0px;
+    left: 0;
     width: 60%;
   }
 
@@ -316,7 +316,7 @@ body {
   background: white;
   border-radius: 14px;
   padding: 14px 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, .2);
+  box-shadow: 0 8px 20px rgb(0 0 0 / 20%);
   font-size: 14px;
   cursor: pointer;
 }
@@ -349,7 +349,7 @@ body {
 
 /* RETORNADO – VERMELHO */
 .card.retornado::before {
-  background: #e53935;
+  background: #ce0000;
 }
 
 /* OUTROS */
@@ -362,7 +362,7 @@ body {
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgb(0 0 0 / 65%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -383,7 +383,7 @@ body {
 }
 
 /* ================= RESPONSIVO ================= */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .topo-layout {
     grid-template-columns: 1fr;
   }
@@ -413,13 +413,18 @@ body {
 
 /* ================= PAINEL DETALHES (CARDS) ================= */
 .painel-detalhes {
-  background: #ffffff;
+  background: #fff;
   width: 600px;
   border-radius: 18px;
   padding: 20px 20px 30px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 20px 40px rgb(0 0 0 / 35%);
   position: relative;
+  text-align: left;
+}
+
+  #conteudoDetalhes h3{
   text-align: center;
+  margin-bottom: 16px;
 }
 
 /* botão fechar */
@@ -436,12 +441,13 @@ body {
 
 .painel-detalhes .fechar:hover {
   color: var(--cor-primaria);
-  font-size: 20px bold;
+  font-size: 20px;
 }
 
 /* ================= CONTEÚDO DETALHES ================= */
 .detalhes-centro {
-  text-align: center;
+  text-align: left;
+
 }
 
 /* lista de itens centralizada como bloco */
@@ -453,7 +459,7 @@ body {
 
 /* linha simples */
 .linha-simples {
-  margin: 6px 0;
+  margin: 0;
   font-size: 14px;
 }
 
@@ -493,6 +499,7 @@ body {
 /* Só ativa se tiver mais de 10 itens */
 .lista-itens.lista-scroll {
   max-height: 260px;
+
   /* altura visível */
   overflow-y: auto;
   padding-right: 6px;
@@ -504,11 +511,11 @@ body {
 }
 
 .lista-itens.lista-scroll::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.35);
+  background: rgb(0 0 0 / 35%);
   border-radius: 4px;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .lista-itens.lista-scroll {
     max-height: 200px;
   }
@@ -520,7 +527,7 @@ body {
   background: #f4f6fb;
   border-radius: 18px;
   padding: 22px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 15%);
   max-width: 100%;
 }
 
@@ -592,11 +599,11 @@ body {
 }
 
 body.tema-luara .grafico-barra-bg {
-  background: rgba(236, 64, 122, 0.25);
+  background: rgb(236 64 122 / 25%);
 }
 
 body.tema-quatrok .grafico-barra-bg {
-  background: rgba(77, 127, 226, 0.25);
+  background: rgb(77 127 226 / 25%);
 }
 
 
@@ -604,7 +611,7 @@ body.tema-quatrok .grafico-barra-bg {
 .grafico-linha::after {
   content: attr(data-tooltip);
   position: absolute;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgb(0 0 0 / 75%);
   color: #fff;
   padding: 6px 10px;
   border-radius: 6px;
@@ -624,14 +631,14 @@ body.tema-quatrok .grafico-barra-bg {
 /* ================= FUNDO APENAS NA TELA DE LOGIN ================= */
 
 /* enquanto o sistema estiver oculto (antes do login) */
-body:not(.tema-quatrok):not(.tema-luara) {
+body:not(.tema-quatrok, .tema-luara) {
   background: #4b464693;
+
   /* cinza claro */
 }
 
 /* ================= MOBILE – LOGIN + SISTEMA ================= */
-@media (max-width: 768px) {
-
+@media (width <= 768px) {
   /* ===== CONTAINER GERAL ===== */
   .container {
     padding: 30px 16px;
@@ -654,7 +661,7 @@ body:not(.tema-quatrok):not(.tema-luara) {
   /* ===== LOGIN ===== */
   .logo-login {
     display: block;
-    margin: 0 auto 18px auto;
+    margin: 0 auto 18px;
     max-width: 140px;
     height: auto;
   }
@@ -665,7 +672,7 @@ body:not(.tema-quatrok):not(.tema-luara) {
     margin-top: 30px;
     padding: 30px 20px;
     border-radius: 16px;
-    background: rgba(60, 60, 60, 0.94);
+    background: rgb(60 60 60 / 94%);
   }
 
   #loginVendedor h3 {
@@ -761,15 +768,15 @@ body:not(.tema-quatrok):not(.tema-luara) {
 
   /* ===== DETALHES (OVERLAY) ===== */
   .painel-detalhes {
-    width: 92%;
+    width: 90%;
     padding: 40px 16px 24px;
     border-radius: 16px;
   }
 
   .linha-dupla {
-    flex-direction: column;
+    flex-direction: inherit;
     align-items: flex-start;
-    gap: 6px;
+    gap: 3px;
   }
 
   .linha-dupla span {
@@ -777,7 +784,7 @@ body:not(.tema-quatrok):not(.tema-luara) {
   }
 
   .linha-rastreio-central {
-    font-size: 13px;
+    font-size: 20px;
   }
 }
 
@@ -795,14 +802,17 @@ body:not(.tema-quatrok):not(.tema-luara) {
   justify-content: center;
   gap: 8px;
   background-color: #6b6b6b;
-  /*altera o fundo do botão */
+
+  /* altera o fundo do botão */
   border-radius: 8px;
   cursor: pointer;
   margin-top: 15px;
   width: 50px;
   height: 50px;
+
   /* Define uma altura exata */
   overflow: hidden;
+
   /* Opcional: esconde o conteúdo que passar da altura */
 }
 
@@ -839,10 +849,13 @@ body.modo-busca #resultado {
   display: grid;
   margin-top: -150px;
   margin-left: 1950px;
+
   /* sempre centraliza horizontal */
   transform: translate(-50%, -50%);
+
   /* centraliza levando em conta o próprio elemento */
   width: 100%;
+
   /* tamanho fixo, não relativo */
 
   z-index: 1000;
@@ -850,12 +863,12 @@ body.modo-busca #resultado {
 
 
 /* ================= MOBILE – MODO BUSCA ================= */
-@media (max-width: 768px) {
-
+@media (width <= 768px) {
   /* layout vira coluna */
   body.modo-busca .topo-layout {
       display: contents;
   }
+
 /* RESULTADOS */
 body.modo-busca #resultado {
   order: 2;
@@ -869,13 +882,15 @@ body.modo-busca #painelGrafico {
   margin: 0;
   max-height: none;
 }
-  /* CARD – vem primeiro*/
+
+  /* CARD – vem primeiro */
     body.modo-busca #resultado,
     body.modo-busca #painelGrafico {
       margin-top: 0 !important;
       margin-left: 0 !important;
       transform: none !important;
     }
+
     /* ================= pai correto ================= */
     body.modo-busca #sistema {
       display: flex;
@@ -895,9 +910,8 @@ body.modo-busca #painelGrafico {
   min-width: unset !important;
   max-width: 520px;
   width: 100%;
-  background: rgba(60, 60, 60, 0.92);
+  background: rgb(60 60 60 / 92%);
   border-radius: 18px;
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -928,6 +942,7 @@ body.modo-busca #painelGrafico {
   align-items: center;
   justify-content: center;
   width: 22px;
+
   /* área de clique */
   height: 22px;
   cursor: pointer;
@@ -938,6 +953,7 @@ body.modo-busca #painelGrafico {
 /* TAMANHO DO ÍCONE */
 #limparFiltroGrafico svg {
   width: 30px;
+
   /* 👈 ajuste aqui */
   height: 30px;
 }
@@ -949,8 +965,50 @@ body.modo-busca #painelGrafico {
 }
 
 .linha-rastreio-central button{
-  border-radius: 10px 10px;
+  border-radius: 10px;
   border: none;
   background: var(--cor-barra);
   color: white;
 }
+/* ================= NOTIFICAÇÕES ================= */
+.btn-notificacao {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #e2ddddde;
+  border: none;
+  border-radius: 50px;
+  padding: 6px 12px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 10px rgb(0 0 0 / 25%);
+}
+
+.btn-notificacao:hover {
+  background: #f0f0f0;
+}
+
+.badge {
+  background: #d32f2f;
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.notificacao-item {
+  background: #f4f6fb;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.notificacao-item:hover {
+  background: #6d748b83;
+}
+

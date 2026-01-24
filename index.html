@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -17,6 +18,15 @@
     </div>
   </div>
 
+  <!-- ================= OVERLAY NOTIFICAÇÕES ================= -->
+<div id="overlayNotificacoes" class="overlay oculto">
+  <div class="painel-detalhes">
+    <button class="fechar" type="button" onclick="fecharNotificacoes()">✕</button>
+    <h3 style="text-align:center">Notificações</h3>
+    <div id="listaNotificacoes"></div>
+  </div>
+</div>
+
   <!-- ================= MODAL LIMPAR ================= -->
   <div id="modalLimpar" class="modal oculto">
     <div class="modal-box">
@@ -29,40 +39,37 @@
   </div>
 
   <!-- ================= TOPO ================= -->
-  
-  
+
+
   <!-- ================= CONTEÚDO ================= -->
   <main class="container">
 
     <!-- ================= LOGIN ================= -->
 
-    
+
     <section id="loginVendedor" class="box-busca">
       <header class="topo">
         <img id="logoMarca" src="Logo - Grupo 4k - Branco.png" class="logo" alt="Logo da empresa" />
       </header>
       <h3 style="text-align:center;color:white;">Login do Vendedor</h3>
-      
-      <input
-        id="codigoVendedor"
-        type="text"
-        placeholder="Digite o código do vendedor"
-        autocomplete="off"
-      />
+
+      <input id="codigoVendedor" type="text" placeholder="Digite o código do vendedor" autocomplete="off" />
       <button id="btnLoginVendedor">Entrar</button>
 
       <div id="erroLogin" style="color:#ffeb3b;text-align:center;font-size:13px;"></div>
     </section>
 
     <div class="ajuda-wrapper">
-  <abbr title="Ajuda">
-  <button id="btnAjudaSuporte" class="btn-ajuda"> 
-  <img src="iconesuporte.png" alt="Ajuda e Suporte" class="icone-suporte" />
-  </abbr>
+      <abbr title="Ajuda">
+      <button id="btnAjudaSuporte" class="btn-ajuda">
+     <img src="iconesuporte.png" alt="Ajuda e Suporte" class="icone-suporte" />
+     </button>
+    </abbr>
 
-</button>
 
-</div>
+      </button>
+
+    </div>
     <!-- ================= SISTEMA ================= -->
     <section id="sistema" class="oculto">
 
@@ -70,30 +77,27 @@
       <section class="topo-layout">
 
         <!-- ================= BUSCA / INFO ================= -->
+         
         <div class="box-busca oculto" id="boxFiltros">
 
-  <img
-    id="logoMarcaBox"
-    class="logo-marca-box"
-    alt="Logo da marca"
-  />
+          <img id="logoMarcaBox" class="logo-marca-box" alt="Logo da marca" />
 
-  <div id="boasVindas" class="boas-vindas"></div>
+          <div id="boasVindas" class="boas-vindas"></div>
 
 
-          <input
-            id="filtroBusca"
-            type="text"
-            placeholder="Buscar por Nota Fiscal ou Pedido"
-            disabled
-          />
+          <input id="filtroBusca" type="text" placeholder="Buscar por Nota Fiscal ou Pedido" disabled />
 
           <div id="contador" class="contador"></div>
 
           <!-- TROCAR VENDEDOR (ÁREA VERMELHA) -->
           <button id="trocarVendedor" type="button" class="oculto trocar-vendedor">
-          🔄 Trocar vendedor
+            🔄 Trocar vendedor
           </button>
+
+          <button id="btnNotificacoes" class="btn-notificacao oculto">
+         🔔 <span id="contadorNotificacoes" class="badge">0</span>
+          </button>
+
 
         </div>
 
@@ -114,4 +118,5 @@
   <script src="teste01.js"></script>
 
 </body>
+
 </html>

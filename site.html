@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rastreamento de Amostras</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ================= OVERLAY DETALHES ================= -->
+  <div id="overlayDetalhes" class="overlay oculto">
+    <div class="painel-detalhes">
+      <button class="fechar" type="button" onclick="fecharDetalhes()">✕</button>
+      <div id="conteudoDetalhes"></div>
+    </div>
+  </div>
+
+  <!-- ================= OVERLAY NOTIFICAÇÕES ================= -->
+<div id="overlayNotificacoes" class="overlay oculto">
+  <div class="painel-detalhes">
+    <button class="fechar" type="button" onclick="fecharNotificacoes()">✕</button>
+    <h3 style="text-align:center">Notificações</h3>
+    <div id="listaNotificacoes"></div>
+  </div>
+</div>
+
+  <!-- ================= MODAL LIMPAR ================= -->
+  <div id="modalLimpar" class="modal oculto">
+    <div class="modal-box">
+      <p>Deseja limpar todos os filtros?</p>
+      <div class="modal-botoes">
+        <button id="confirmarLimpar">Sim</button>
+        <button id="cancelarLimpar">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOPO ================= -->
+
+
+  <!-- ================= CONTEÚDO ================= -->
+  <main class="container">
+
+    <!-- ================= LOGIN ================= -->
+
+
+    <section id="loginVendedor" class="box-login">
+      <header class="topo">
+        <img id="logoMarca" src="Logo - Grupo 4k - Branco.png" class="logo" alt="Logo da empresa" />
+      </header>
+      <h3 style="text-align:center;color:white;">Login do Vendedor</h3>
+
+      <input id="codigoVendedor" type="text" placeholder="Digite o código do vendedor" autocomplete="off" />
+      <button id="btnLoginVendedor">Entrar</button>
+
+      <div id="erroLogin" style="color:#ffeb3b;text-align:center;font-size:13px;"></div>
+    </section>
+
+    <div class="ajuda-wrapper">
+      <abbr title="Ajuda">
+      <button id="btnAjudaSuporte" class="btn-ajuda">
+     <img src="iconesuporte.png" alt="Ajuda e Suporte" class="icone-suporte" />
+     </button>
+    </abbr>
+
+
+      </button>
+
+    </div>
+    <!-- ================= SISTEMA ================= -->
+    <section id="sistema" class="oculto">
+
+      <!-- ================= TOPO LAYOUT ================= -->
+      <section class="topo-layout">
+
+        <!-- ================= BUSCA / INFO ================= -->
+         
+        <div class="box-busca oculto" id="boxFiltros">
+
+          <img id="logoMarcaBox" class="logo-marca-box" alt="Logo da marca" />
+
+          <div id="boasVindas" class="boas-vindas"></div>
+
+
+          <div class="filtro-wrapper">
+            <input id="filtroBusca" type="text" placeholder="Buscar por Nota Fiscal..." disabled />
+          
+            <select id="tipoFiltro">
+              <option value="nota">📄 Nota Fiscal</option>
+              <option value="pedido">📦 Pedido</option>
+              <option value="cliente">👤 Cod Cliente</option>
+              <option value="representante">👤 Cod Representante</option>
+            </select>
+          </div>
+
+
+
+          
+          <div id="contador" class="contador"></div>
+
+          <!-- TROCAR VENDEDOR (ÁREA VERMELHA) -->
+          <button id="trocarVendedor" type="button" class="oculto trocar-vendedor">
+            🔄 Trocar vendedor
+          </button>
+
+          <button id="btnNotificacoes" class="btn-notificacao oculto">
+         🔔 <span id="contadorNotificacoes" class="badge">0</span>
+          </button>
+
+
+        </div>
+
+        <!-- ================= GRÁFICO ================= -->
+        <div id="painelGrafico" class="resumo-card oculto"></div>
+
+      </section>
+
+      <!-- ================= RESULTADOS ================= -->
+      <section id="resultado" class="lista-cards oculto"></section>
+
+    </section>
+
+  </main>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="teste01.js"></script>
+
+</body>
+
+</html>

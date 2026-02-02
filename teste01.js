@@ -1,3 +1,4 @@
+
 /* ================= CONFIG ================= */
 const url =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7og0_9fNfXHoINFiE-s75rCPc-RIqAFLwcl8dQqMvEKXimWrMfgQz30QxPKul8_1Cf8RB4YSoizJy/pub?gid=0&single=true&output=csv";
@@ -7,6 +8,9 @@ let dados = [];
 let dadosVendedora = [];
 let csvCarregado = false;
 let situacaoSelecionada = null;
+let notificacoesLidas = new Set();
+let tipoFiltro = "nota";
+
 
 /* ================= ELEMENTOS ================= */
 const loginBox = document.getElementById("loginVendedor");
@@ -23,92 +27,33 @@ const contador = document.getElementById("contador");
 const boasVindas = document.getElementById("boasVindas");
 const overlay = document.getElementById("overlayDetalhes");
 const conteudoDetalhes = document.getElementById("conteudoDetalhes");
-const tipoBusca = document.getElementById("tipoBusca");
+const btnNotificacoes = document.getElementById("btnNotificacoes");
+const contadorNotificacoes = document.getElementById("contadorNotificacoes");
+const overlayNotificacoes = document.getElementById("overlayNotificacoes");
+const listaNotificacoes = document.getElementById("listaNotificacoes");
+const selectTipoFiltro = document.getElementById("tipoFiltro");
+
 const btnAjudaSuporte = document.getElementById("btnAjudaSuporte");
-const btnTipoBusca = document.getElementById("btnTipoBusca");
-const menuTipoBusca = document.getElementById("menuTipoBusca");
-const labelTipoBusca = document.getElementById("labelTipoBusca");
-
-function obterPedidosPendentes() {
-  const mapa = new Map();
-
-  dadosVendedora.forEach(l => {
-    const situacao = normalizar(l[26] || "");
-    if (!situacao.includes("PENDENTE")) return;
-
-    const nota = l[0];
-    if (!mapa.has(nota)) mapa.set(nota, l);
-  });
-
-  return [...mapa.values()];
-}
 
 
-/* ================= INICIALIZA TIPO DE BUSCA PADRÃO ================= */
-(function initTipoBuscaPadrao() {
-  tipoBusca.value = "nota";
-
-  labelTipoBusca.innerText = "📄 Nota Fiscal";
-  campoBusca.placeholder = "📄 Buscar por Nota Fiscal";
-})();
-
-
-
-function atualizarPlaceholderBusca() {
-  const placeholders = {
-    nota: "Buscar por Nota Fiscal",
-    pedido: "Buscar por Pedido",
-    cliente: "Buscar por Nº do Cliente",
-    representante: "Buscar por Nº do Representante"
-  };
-
-  const tipo = tipoBusca.value;
-  campoBusca.placeholder = placeholders[tipo] || "Digite para buscar";
-}
-
-
-
-
-/* ================= TIPO DE BUSCA ================= */
-btnTipoBusca.onclick = () => {
-  menuTipoBusca.classList.toggle("oculto");
+const placeholders = {
+  nota: "Busca p. Nota Fiscal",
+  pedido: "Busca p. Pedido",
+  cliente: "Busca p. Cód Cliente",
+  representante: "Busca p. Cód Representante"
 };
 
-    // visual ativo
-    menuTipoBusca.querySelectorAll(".menu-item").forEach(item => {
-  item.onclick = () => {
+selectTipoFiltro.addEventListener("change", () => {
+  tipoFiltro = selectTipoFiltro.value;
 
-    const tipo = item.dataset.tipo;
+  campoBusca.placeholder =
+    placeholders[tipoFiltro] || "Buscar…";
 
-    tipoBusca.value = tipo;
-    labelTipoBusca.innerText = item.innerText;
+  campoBusca.value = "";
+  campoBusca.focus();
 
-    // 🔥 AQUI é o ponto-chave
-    const placeholders = {
-      nota: "Buscar por Nota Fiscal",
-      pedido: "Buscar por Pedido",
-      cliente: "Buscar por Nº do Cliente",
-      representante: "Buscar por Nº do Representante"
-    };
-
-    atualizarPlaceholderBusca();
-    campoBusca.value = "";
-
-
-    filtrar();
-    menuTipoBusca.classList.add("oculto");
-  };
+  filtrar();
 });
-
-
-// fecha ao clicar fora
-document.addEventListener("click", e => {
-  if (!e.target.closest(".tipo-busca-wrapper")) {
-    menuTipoBusca.classList.add("oculto");
-  }
-});
-
-
 
 /* ================= UTIL ================= */
 function saudacaoPorHorario() {
@@ -124,7 +69,7 @@ function normalizarTextoOrdenacao(txt) {
   // remove tudo até o terceiro hífen
   // exemplo: "1 - Pilotagem - PUNHO AP INFINITY BCO 1Q"
   // vira: "PUNHO AP INFINITY BCO 1Q"
-  const descricao = txt.replace(/^.*?-\s*.*?-\s*/,"");
+  const descricao = txt.replace(/^.*?-\s*.*?-\s*/, "");
 
   return descricao
     .normalize("NFD")
@@ -137,16 +82,8 @@ function normalizarTextoOrdenacao(txt) {
 
 
 function normalizar(v) {
-  return v
-    ?.toString()
-    .normalize("NFD")                 // quebra caracteres compostos
-    .replace(/[\u0300-\u036f]/g, "")  // remove acentos
-    .replace(/\uFE0F/g, "")           // 🔥 remove variation selector do emoji
-    .replace(/⚠/g, "")                // 🔥 remove o emoji em si
-    .trim()
-    .toUpperCase();
+  return v?.toString().trim().toUpperCase();
 }
-
 
 function parseDataBR(data) {
   if (!data) return new Date(0);
@@ -187,9 +124,6 @@ function validarCodigo() {
   if (!csvCarregado) return;
 
   const cod = normalizar(codigoVendedor.value);
-  window.exibirCliente = cod.startsWith("V") || cod.startsWith("S");
-  window.exibirRepresentante = cod.startsWith("V");
-
   if (!cod) return;
 
   dadosVendedora = dados.filter(l => normalizar(l[22]) === cod);
@@ -208,8 +142,7 @@ function validarCodigo() {
 
   document.getElementById("boxFiltros").classList.remove("oculto");
   campoBusca.disabled = false;
-  btnTipoBusca.disabled = false;
-  atualizarPlaceholderBusca();
+  campoBusca.placeholder = placeholders[tipoFiltro];
 
 
   boasVindas.innerHTML = `
@@ -222,111 +155,25 @@ function validarCodigo() {
 
   /* ================= TEMA + LOGO ================= */
   const marca = normalizar(dadosVendedora[0][24]);
-  window.marcaLogada = marca;
 
   document.body.classList.remove("tema-luara", "tema-quatrok");
 
- const logoMarcaBox = document.getElementById("logoMarcaBox");
+  const logoMarcaBox = document.getElementById("logoMarcaBox");
 
-if (marca === "LUARA") {
-  document.body.classList.add("tema-luara");
-  logoMarca.src = "luara branco.png";
-  logoMarcaBox.src = "luara branco.png";
-} else {
-  document.body.classList.add("tema-quatrok");
-  logoMarca.src = "4k BRANCO.png";
-  logoMarcaBox.src = "4k BRANCO.png";
-}
-
-
-  filtrar();
-  atualizarNotificacoes();
-}
-
-const btnNotificacoes = document.getElementById("btnNotificacoes");
-const contadorNotificacoes = document.getElementById("contadorNotificacoes");
-
-function atualizarNotificacoes() {
-  const pendentes = {};
-
-  dadosVendedora.forEach(l => {
-    if (normalizar(l[26]).includes("PENDENTE")) {
-
-      if (!pendentes[l[0]]) pendentes[l[0]] = [];
-      pendentes[l[0]].push(l);
-    }
-  });
-
-  const grupos = Object.values(pendentes);
-
-  contadorNotificacoes.innerText = grupos.length;
-  const deveMostrarBotao =
-  window.marcaLogada === "LUARA" || grupos.length > 0;
-
-btnNotificacoes.classList.toggle("oculto", !deveMostrarBotao);
-
-
-  listaNotificacoes.innerHTML = "";
-
-  if (!grupos.length) {
-    listaNotificacoes.innerHTML =
-      "<p style='text-align:center'>Nenhuma notificação no momento.</p>";
-    return;
+  if (marca === "LUARA") {
+    document.body.classList.add("tema-luara");
+    logoMarca.src = "luara branco.png";
+    logoMarcaBox.src = "luara branco.png";
+  } else {
+    document.body.classList.add("tema-quatrok");
+    logoMarca.src = "4k BRANCO.png";
+    logoMarcaBox.src = "4k BRANCO.png";
   }
 
-  grupos.forEach(grupo => {
-    const l = grupo[0];
-    const situacaoTexto = normalizar(l[25]);
+  atualizarNotificacoes();
+  btnNotificacoes.classList.remove("oculto");
 
-    const div = document.createElement("div");
-
-    let classeAlerta = "";
-    if (situacaoTexto.includes("AGUARDANDO RETIRADA")) {
-      classeAlerta = "alerta-retirada";
-    }
-
-    div.className = `notificacao-item ${classeAlerta}`;
-
-    div.innerHTML = `
-      <strong>Nota:</strong> ${l[0]}<br>
-      <strong>Cliente:</strong> ${l[19]}<br>
-      <strong>Situação:</strong> ${l[25]}
-    `;
-
-    // 🔥 AQUI ESTÁ O PULO DO GATO
-    div.onclick = () => {
-      fecharNotificacoes();   // fecha o sino
-      abrirDetalhes(grupo);   // abre o painel correto
-    };
-
-    listaNotificacoes.appendChild(div);
-  });
-}
-
-
-const overlayNotificacoes = document.getElementById("overlayNotificacoes");
-const listaNotificacoes = document.getElementById("listaNotificacoes");
-
-btnNotificacoes.onclick = () => {
-  overlayNotificacoes.classList.remove("oculto");
-  overlayNotificacoes.classList.add("show");
-
-   overlayNotificacoes
-    .querySelector(".painel-detalhes")
-    .classList.add("modo-legenda");
-
-  travarScroll();
-};
-
-function fecharNotificacoes() {
-  overlayNotificacoes.classList.add("oculto");
-  overlayNotificacoes.classList.remove("show");
-
-  overlayNotificacoes
-    .querySelector(".painel-detalhes")
-    .classList.remove("modo-legenda");
-
-  liberarScroll();
+  filtrar();
 }
 
 /* ================= FILTRO ================= */
@@ -343,35 +190,28 @@ function filtrar() {
   let lista = [...dadosVendedora];
   const termo = campoBusca.value.trim();
 
- if (termo) {
-  const tipo = tipoBusca.value;
+  if (termo) {
+    lista = lista.filter(l => {
+      switch (tipoFiltro) {
+        case "nota":
+          return l[0]?.includes(termo);
 
-  lista = lista.filter(l => {
-    switch (tipo) {
-      case "nota":
-        return l[0]?.includes(termo); // Nota Fiscal
+        case "pedido":
+          return l[14]?.includes(termo);
 
-      case "pedido":
-        return l[14]?.includes(termo); // Pedido
+        case "cliente":
+          return l[18]?.includes(termo);
 
-      case "cliente":
-        return l[18]?.includes(termo); // Nº Cliente
+        case "representante":
+          return l[20]?.includes(termo);
 
-      case "representante":
-        return l[20]?.includes(termo); // Nº Representante
-
-      default:
-        return false;
-    }
-  });
-}
-
-
-  if (situacaoSelecionada) {
-    lista = lista.filter(l =>
-      normalizar(l[26]) === normalizar(situacaoSelecionada)
-    );
+        default:
+          return false;
+      }
+    });
   }
+
+  
 
   renderizar(lista);
 }
@@ -393,25 +233,11 @@ function renderizar(lista) {
   let grupos = agruparPorNota(lista);
 
   // 🔒 ORDEM FIXA: MAIS RECENTE PRIMEIRO
-  // 🔒 PRIORIDADE + ORDEM POR DATA
-grupos.sort((a, b) => {
-  const situacaoA = normalizar(a[0][25] || "");
-  const situacaoB = normalizar(b[0][25] || "");
-
-  const prioridadeA = situacaoA.includes("AGUARDANDO RETIRADA") ? 0 : 1;
-  const prioridadeB = situacaoB.includes("AGUARDANDO RETIRADA") ? 0 : 1;
-
-  // 1º: prioridade (aguardando retirada sempre em cima)
-  if (prioridadeA !== prioridadeB) {
-    return prioridadeA - prioridadeB;
-  }
-
-  // 2º: mais recente primeiro
-  const dataA = Math.max(...a.map(i => parseDataBR(i[5])));
-  const dataB = Math.max(...b.map(i => parseDataBR(i[5])));
-  return dataB - dataA;
-});
-
+  grupos.sort((a, b) => {
+    const dataA = Math.max(...a.map(i => parseDataBR(i[5])));
+    const dataB = Math.max(...b.map(i => parseDataBR(i[5])));
+    return dataB - dataA;
+  });
 
   contador.innerText = `${grupos.length} envio(s)`;
 
@@ -420,67 +246,70 @@ grupos.sort((a, b) => {
 
   grupos.forEach(grupo => {
     const l = grupo[0];
-    const codigoCliente = l[18] || "-";
-    const nomeCliente = l[19] || l[7] || "-";
-
-    const numeroRepresentante = l[20] || "-";
-    const nomeRepresentante = l[21] || "-";
-
     const card = document.createElement("div");
 
-    const situacao = normalizar(l[26]);
-    // 🔴 ALERTA: aguardando retirada no endereço indicado (coluna 25)
-    const situacaoTexto = normalizar(l[25]);
-
-    const temAlertaRetirada =
-      situacaoTexto.includes("AGUARDANDO RETIRADA");
-
+    const situacao = normalizar(l[25]);
 
     let classeStatus = "outro";
+    let classeAlerta = "";
 
-    if (situacao.includes("ENTREGUE")) {
-      classeStatus = "entregue";
-    } 
-    else if (situacao.includes("PENDENTE")) {
-      classeStatus = "pendente";
-    } 
-    else if (
+    if (
+      situacao.includes("REMETENTE") ||
       situacao.includes("RETORN") ||
       situacao.includes("DEVOL")
     ) {
-      classeStatus = "retornado";
+      classeStatus = "retornado"; // 🔴 vermelho
+    }
+    else if (situacao.includes("PENDENTE")) {
+      classeStatus = "pendente"; // 🟡 amarelo
+    }
+    else if (situacao.includes("ENTREGUE")) {
+      classeStatus = "entregue"; // 🟢 verde
     }
 
-card.className = `card ${classeStatus}`;
 
+    /* ⚠️ ALERTA DE RETIRADA */
+    if (situacao.includes("AGUARDANDO RETIRADA")) {
+      classeAlerta = "alerta-retirada";
+    }
 
-    card.className = `card ${classeStatus}`;
+    card.className = `card ${classeStatus} ${classeAlerta}`;
+
 
     card.onclick = () => abrirDetalhes(grupo);
 
-  card.innerHTML = `
-  ${temAlertaRetirada ? `<div class="alerta-retirada">📦⛔</div>` : ""}
+    
+    const tipoEnvio = normalizar(l[2]); // PAC ou SEDEX
 
-  <strong>Nota:</strong> ${l[0]}<br>
-  <strong>Pedido:</strong> ${l[14]}<br>
-  ${window.exibirCliente ? `
-  <strong>Cliente: </strong>${nomeCliente}<br>
-` : ""}
+    let logoEnvio = `<strong>${tipoEnvio || "ENVIO"}</strong>`;
 
-${window.exibirRepresentante ? `
-  <span class="linha-representante">
-    <strong>Representante:</strong>
-    ${nomeRepresentante}
-  </span><br>
-` : ""}
+    if (tipoEnvio === "PAC") {
+      logoEnvio = `<img src="pac.png" alt="PAC" class="logo-envio">`;
+    } else if (tipoEnvio === "SEDEX") {
+      logoEnvio = `<img src="sedex.png" alt="SEDEX" class="logo-envio">`;
+    }
 
-  <strong>Situação:</strong>
-  <span class="situacao ${temAlertaRetirada ? "aguardando-retirada" : ""}">
-    ${l[25]}
-  </span><br>
+    card.innerHTML = `
+  <div class="card-topo">
+    ${logoEnvio}
+  </div>
+  <div class="linha-info">
+    <strong>Nota Fiscal:</strong> ${l[0]}
+    <span class="separador">|</span>
+    <strong>Pedido:</strong> ${l[14]}
+  </div>
+  <div class="card-divisor"></div>
 
-  <strong>Itens:</strong> ${grupo.length}
+  
+
+  <div class="linha-info"><strong>Cliente:</strong> ${l[7]}</div>
+  <div class="linha-info"><strong>Situação:</strong> ${l[25]}</div>
+  <div class="linha-info"><strong>Itens:</strong> ${grupo.length}</div>
 `;
+
+
+
+
 
     resultado.appendChild(card);
   });
@@ -501,6 +330,39 @@ painelGrafico.addEventListener("click", e => {
 
   atualizarSelecaoGrafico();
   filtrar();
+
+  function filtrar() {
+    let lista = [...dadosVendedora];
+    const termo = campoBusca.value.trim();
+
+    // 🔍 filtro texto
+    if (termo) {
+      lista = lista.filter(l => {
+        switch (tipoFiltro) {
+          case "nota":
+            return l[0]?.includes(termo);
+          case "pedido":
+            return l[14]?.includes(termo);
+          case "cliente":
+            return l[18]?.includes(termo);
+          case "representante":
+            return l[20]?.includes(termo);
+          default:
+            return false;
+        }
+      });
+    }
+
+    // 📊 filtro do gráfico (AQUI ESTAVA FALTANDO)
+    if (situacaoSelecionada) {
+      lista = lista.filter(
+        l => normalizar(l[26]) === normalizar(situacaoSelecionada)
+      );
+    }
+
+    renderizar(lista);
+  }
+
 });
 
 
@@ -539,8 +401,7 @@ function gerarGraficoSituacao(listaBase) {
   <div class="grafico-header">
   <strong>Gráfico de Situações</strong>
 
-  ${
-    situacaoSelecionada
+  ${situacaoSelecionada
       ? `
         <span id="limparFiltroGrafico" title="Limpar filtro">
   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -560,7 +421,7 @@ function gerarGraficoSituacao(listaBase) {
 
       `
       : ""
-  }
+    }
 </div>
 
 
@@ -602,19 +463,25 @@ painelGrafico.addEventListener("click", e => {
 
 
 /* ================= DETALHES ================= */
+
 function abrirDetalhes(grupo) {
   const l = grupo[0];
-  const uf = l[11] || "-";
-  const estado = l[12] || "-";
-
-  const codigoCliente = l[18] || "-";
-  const nomeCliente = l[19] || l[7] || "-";
-
-  const numeroRepresentante = l[20] || "-";
-  const nomeRepresentante = l[21] || "-";
-
   const rastreio = l[1] || "Não informado";
+  // 🔔 ALERTA DE RETIRADA (DETALHES)
+  const situacao = normalizar(l[25]);
+  const painelDetalhes = document.querySelector(".painel-detalhes");
+
+  // limpa estado anterior
+  painelDetalhes.classList.remove("alerta-retirada");
+
+  // aplica alerta se necessário
+  if (situacao.includes("AGUARDANDO RETIRADA")) {
+    painelDetalhes.classList.add("alerta-retirada");
+  }
+
   const temScroll = grupo.length > 10;
+  const codigoLoginVendedor = normalizar(codigoVendedor.value);
+  const mostrarRepresentante = codigoLoginVendedor.startsWith("V");
 
   conteudoDetalhes.innerHTML = `
     <div class="detalhes-centro">
@@ -629,40 +496,21 @@ function abrirDetalhes(grupo) {
         <strong>Rastreio:</strong>
         <span>${rastreio}</span>
         ${rastreio !== "Não informado"
-          ? `<button onclick="rastrearCorreios('${rastreio}')">📦 Rastrear</button>`
-          : ""}
+      ? `<button onclick="rastrearCorreios('${rastreio}')">📦 Rastrear</button>`
+      : ""}
       </div>
-
-            ${window.exibirCliente ? `
+      <span><strong>Cliente:</strong> ${l[18]}<span>
+      <span><strong>-</strong> ${l[7]}</span>
+      ${mostrarRepresentante ? `
       <p>
-        <strong>Cliente:</strong>
-        ${codigoCliente} - ${nomeCliente}
+      <span><strong>Representante:</strong> ${l[20]}</span>
+      <span><strong> - </strong>${l[21]}</span>
       </p>
-    ` : ""}
-
-        ${window.exibirRepresentante ? `
-          <p class="linha-representante">
-            <strong>Representante:</strong>
-            ${numeroRepresentante} - ${nomeRepresentante}
-          </p>
-        ` : ""}
-                ${window.exibirCliente ? `
-          <p>
-            <strong>Localização:</strong>
-            ${uf} / ${estado}
-          </p>
-        ` : ""}
-
-        <strong>Situação:</strong>
-        <span class="situacao ${
-          normalizar(l[25]).includes("AGUARDANDO RETIRADA")
-            ? "aguardando-retirada"
-            : ""
-        }">
-          ${l[25]}
-        </span>
-      </p>
-
+      ` : ""}
+      <p></p>
+      <span><strong>Cidade:</strong> ${l[11]}<span>
+      <span><strong>-</strong> ${l[12]}</span>
+      <p><strong>Situação:</strong> ${l[25]}</p>
 
       <div class="linha-dupla">
         <span><strong>Postagem:</strong> ${l[5] || "-"}</span>
@@ -673,15 +521,15 @@ function abrirDetalhes(grupo) {
 
       <ul class="lista-itens ${temScroll ? "lista-scroll" : ""}">
   ${[...grupo]
-    .sort((a, b) => {
-      const da = normalizarTextoOrdenacao(a[15]);
-      const db = normalizarTextoOrdenacao(b[15]);
-      return da.localeCompare(db, "pt-BR");
-    })
-    .map(i => `
+      .sort((a, b) => {
+        const da = normalizarTextoOrdenacao(a[15]);
+        const db = normalizarTextoOrdenacao(b[15]);
+        return da.localeCompare(db, "pt-BR");
+      })
+      .map(i => `
       <li>${i[16]} - ${i[17]} - ${i[15]}</li>
     `)
-    .join("")}
+      .join("")}
 </ul>
 
 
@@ -689,6 +537,13 @@ function abrirDetalhes(grupo) {
 
     </div>
   `;
+  
+
+  function fecharNotificacoes() {
+    overlayNotificacoes.classList.remove("show");
+    overlayNotificacoes.classList.add("oculto");
+    liberarScroll();
+  }
 
   overlay.classList.add("show");
   overlay.classList.remove("oculto");
@@ -699,12 +554,38 @@ function abrirDetalhes(grupo) {
 function fecharDetalhes() {
   overlay.classList.remove("show");
   overlay.classList.add("oculto");
+
+  // limpa alerta do painel de detalhes
+  const painelDetalhes = document.querySelector(".painel-detalhes");
+  painelDetalhes.classList.remove("alerta-retirada");
+
   liberarScroll();
 }
+
+function fecharNotificacoes() {
+  overlayNotificacoes.classList.remove("show");
+  overlayNotificacoes.classList.add("oculto");
+  liberarScroll();
+}
+
 
 overlay.addEventListener("click", e => {
   if (e.target === overlay) fecharDetalhes();
 });
+overlayNotificacoes.addEventListener("click", e => {
+  if (e.target === overlayNotificacoes) {
+    fecharNotificacoes();
+  }
+});
+document.addEventListener("keydown", e => {
+  if (
+    e.key === "Escape" &&
+    overlayNotificacoes.classList.contains("show")
+  ) {
+    fecharNotificacoes();
+  }
+});
+
 
 document.addEventListener("keydown", e => {
   if (e.key === "Escape" && overlay.classList.contains("show")) {
@@ -739,9 +620,6 @@ trocarVendedor.addEventListener("click", () => {
   trocarVendedor.classList.add("oculto");
   document.getElementById("boxFiltros").classList.add("oculto");
 
-  btnNotificacoes.classList.add("oculto");
-  contadorNotificacoes.innerText = "0";
-
   document.body.classList.remove("tema-luara", "tema-quatrok");
   logoMarca.src = "Logo - Grupo 4k - Branco.png";
 
@@ -750,6 +628,10 @@ trocarVendedor.addEventListener("click", () => {
   btnAjudaSuporte.classList.remove("oculto");
   document.getElementById("logoMarcaBox").src = "";
   document.body.classList.remove("modo-busca");
+  btnNotificacoes.classList.add("oculto");
+  contadorNotificacoes.innerText = "0";
+  listaNotificacoes.innerHTML = "";
+
 
 });
 
@@ -770,9 +652,71 @@ btnAjudaSuporte.addEventListener("click", () => {
   menuAjuda.classList.add("oculto");
 });
 
-/* fecha o menu ao clicar fora */
-document.addEventListener("click", () => {
-  menuAjuda.classList.add("oculto");
+btnNotificacoes.addEventListener("click", (e) => {
+  e.stopPropagation();
+
+  overlayNotificacoes.classList.add("show");
+  overlayNotificacoes.classList.remove("oculto");
+  travarScroll();
+
 });
+
+
+/* Notificações */
+function atualizarNotificacoes() {
+  const pendentes = {};
+
+  dadosVendedora.forEach(l => {
+    if (
+      normalizar(l[26]) ===
+      normalizar("⚠️ Pendente")
+    ) {
+      if (!pendentes[l[0]]) pendentes[l[0]] = [];
+      pendentes[l[0]].push(l);
+    }
+  });
+
+  const grupos = Object.values(pendentes);
+
+  contadorNotificacoes.innerText = grupos.length;
+  btnNotificacoes.classList.toggle("oculto", grupos.length === 0);
+
+  listaNotificacoes.innerHTML = "";
+
+  if (!grupos.length) {
+    listaNotificacoes.innerHTML =
+      "<p style='text-align:center'>Nenhuma notificação no momento.</p>";
+    return;
+  }
+
+  grupos.forEach(grupo => {
+    const l = grupo[0];
+    const situacao = normalizar(l[25]);
+
+    const div = document.createElement("div");
+
+    // 🔔 alerta de retirada nas notificações
+    let classeAlerta = "";
+    if (situacao.includes("AGUARDANDO RETIRADA")) {
+      classeAlerta = "alerta-retirada";
+    }
+
+    div.className = `notificacao-item ${classeAlerta}`;
+
+    div.innerHTML = `
+    <strong>Nota:</strong> ${l[0]}<br>
+    <strong>Cliente:</strong> ${l[7]}<br>
+    <strong>Situação:</strong> ${l[25]}
+  `;
+
+    div.onclick = () => {
+      fecharNotificacoes();
+      abrirDetalhes(grupo);
+    };
+
+    listaNotificacoes.appendChild(div);
+  });
+
+}
 
 

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -18,14 +17,14 @@
     </div>
   </div>
 
-  <!-- ================= OVERLAY NOTIFICAÇÕES ================= -->
-<div id="overlayNotificacoes" class="overlay oculto">
+  <div id="overlayNotificacoes" class="overlay oculto">
   <div class="painel-detalhes">
-    <button class="fechar" type="button" onclick="fecharNotificacoes()">✕</button>
-    <h3 style="text-align:center">Notificações</h3>
+    <button class="fechar" onclick="fecharNotificacoes()">✕</button>
+    <h3>Pedidos Pendentes</h3>
     <div id="listaNotificacoes"></div>
   </div>
 </div>
+
 
   <!-- ================= MODAL LIMPAR ================= -->
   <div id="modalLimpar" class="modal oculto">
@@ -39,37 +38,49 @@
   </div>
 
   <!-- ================= TOPO ================= -->
-
-
+  
+  
   <!-- ================= CONTEÚDO ================= -->
   <main class="container">
 
     <!-- ================= LOGIN ================= -->
 
-
-    <section id="loginVendedor" class="box-login">
+    
+    <section id="loginVendedor" class="box-busca">
       <header class="topo">
         <img id="logoMarca" src="Logo - Grupo 4k - Branco.png" class="logo" alt="Logo da empresa" />
       </header>
       <h3 style="text-align:center;color:white;">Login do Vendedor</h3>
-
-      <input id="codigoVendedor" type="text" placeholder="Digite o código do vendedor" autocomplete="off" />
+      
+      <input
+        id="codigoVendedor"
+        type="text"
+        placeholder="Digite o código do vendedor"
+        autocomplete="off"
+      />
       <button id="btnLoginVendedor">Entrar</button>
 
       <div id="erroLogin" style="color:#ffeb3b;text-align:center;font-size:13px;"></div>
     </section>
 
     <div class="ajuda-wrapper">
-      <abbr title="Ajuda">
-      <button id="btnAjudaSuporte" class="btn-ajuda">
-     <img src="iconesuporte.png" alt="Ajuda e Suporte" class="icone-suporte" />
-     </button>
-    </abbr>
+  <abbr title="Ajuda">
+  <button id="btnAjudaSuporte" class="btn-ajuda"> 
+  <img src="iconesuporte.png" alt="Ajuda e Suporte" class="icone-suporte" />
+  </abbr>
 
-
-      </button>
-
+</button>
+<div id="overlayNotificacoes">
+  <div class="painel-notificacoes">
+    <div id="btnfecharpainel"><button onclick="fecharNotificacoes()">Fechar</button>
+    <div id="listaNotificacoes" class="lista-notificacoes">
+      <!-- itens gerados pelo JS -->
+       </div>
     </div>
+  </div>
+</div>
+
+</div>
     <!-- ================= SISTEMA ================= -->
     <section id="sistema" class="oculto">
 
@@ -77,39 +88,58 @@
       <section class="topo-layout">
 
         <!-- ================= BUSCA / INFO ================= -->
-         
         <div class="box-busca oculto" id="boxFiltros">
 
-          <img id="logoMarcaBox" class="logo-marca-box" alt="Logo da marca" />
-
-          <div id="boasVindas" class="boas-vindas"></div>
-
-
-          <div class="filtro-wrapper">
-            <input id="filtroBusca" type="text" placeholder="Buscar por Nota Fiscal..." disabled />
-          
-            <select id="tipoFiltro">
-              <option value="nota">📄 Nota Fiscal</option>
-              <option value="pedido">📦 Pedido</option>
-              <option value="cliente">👤 Cod Cliente</option>
-              <option value="representante">👤 Cod Representante</option>
-            </select>
-          </div>
+          <button id="btnNotificacoes" class="btn-notificacao oculto" title="Pedidos pendentes">
+  🔔 <span id="contadorNotificacoes" class="badge">0</span>
+</button>
 
 
+  <img
+    id="logoMarcaBox"
+    class="logo-marca-box"
+    alt="Logo da marca"
+  />
 
-          
+  <div id="boasVindas" class="boas-vindas"></div>
+
+          <div class="tipo-busca-wrapper">
+  <button id="btnTipoBusca" class="btn-tipo-busca" disabled>
+    Pesquisar por:
+    <strong id="labelTipoBusca">Nota Fiscal</strong>
+    <span class="seta">▾</span>
+  </button>
+
+  <div id="menuTipoBusca" class="menu-tipo-busca oculto">
+    <div class="menu-item ativo" data-tipo="nota">📄 Nota Fiscal</div>
+    <div class="menu-item" data-tipo="pedido">📦 Pedido</div>
+    <div class="menu-item" data-tipo="cliente">👤 Nº Cliente</div>
+    <div class="menu-item" data-tipo="representante">👤 Nº Representante</div>
+  </div>
+
+  <!-- mantém o select invisível para não quebrar o JS -->
+  <select id="tipoBusca" style="display:none">
+    <option value="nota" selected></option>
+    <option value="pedido"></option>
+    <option value="cliente"></option>
+    <option value="representante"></option>
+  </select>
+</div>
+
+
+          <input
+            id="filtroBusca"
+            type="text"
+            placeholder="Buscar por Nota Fiscal ou Pedido"
+            disabled
+          />
+
           <div id="contador" class="contador"></div>
 
           <!-- TROCAR VENDEDOR (ÁREA VERMELHA) -->
           <button id="trocarVendedor" type="button" class="oculto trocar-vendedor">
-            🔄 Trocar vendedor
+          🔄 Trocar vendedor
           </button>
-
-          <button id="btnNotificacoes" class="btn-notificacao oculto">
-         🔔 <span id="contadorNotificacoes" class="badge">0</span>
-          </button>
-
 
         </div>
 
@@ -130,5 +160,4 @@
   <script src="teste01.js"></script>
 
 </body>
-
 </html>

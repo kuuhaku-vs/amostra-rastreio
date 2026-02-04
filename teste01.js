@@ -43,6 +43,8 @@ function formatarAmostraDetalhe(i) {
 }
 
 function atualizarItemAtivoMenu() {
+  if (!menuTipoBusca) return;
+
   menuTipoBusca.querySelectorAll(".menu-item").forEach(item => {
     item.classList.toggle(
       "ativo",
@@ -50,6 +52,7 @@ function atualizarItemAtivoMenu() {
     );
   });
 }
+
 
 
 function obterPedidosPendentes() {
@@ -164,6 +167,19 @@ function saudacaoPorHorario() {
   return "Boa noite,";
 }
 
+function hashSimples(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = (h << 5) - h + str.charCodeAt(i);
+    h |= 0;
+  }
+  return h >>> 0; // 🔥 força unsigned (corrige o ADM)
+}
+
+const HASH_ADM = 3872595084; // <-- use EXATAMENTE o número do console
+
+
+
 function normalizarTextoOrdenacao(txt) {
   if (!txt) return "";
 
@@ -239,13 +255,29 @@ window.exibirRepresentante = cod.startsWith("V");
 atualizarMenuTipoBusca();
 
   if (!cod) return;
+  
+  // ================= LOGIN MESTRE =================
+  const isAdmin = hashSimples(cod) === HASH_ADM;
+  window.isAdmin = isAdmin;
 
-  dadosVendedora = dados.filter(l => normalizar(l[22]) === cod);
+  if (isAdmin) {
+    dadosVendedora = [...dados];
+    window.exibirCliente = true;
+    window.exibirRepresentante = true;
+    
+  } else {
+    window.exibirCliente = cod.startsWith("V") || cod.startsWith("S");
+    window.exibirRepresentante = cod.startsWith("V");
 
-  if (!dadosVendedora.length) {
-    erroLogin.innerText = "Código do vendedor não encontrado";
-    return;
+    dadosVendedora = dados.filter(l => normalizar(l[22]) === cod);
+
+    if (!dadosVendedora.length) {
+      erroLogin.innerText = "Código do vendedor não encontrado";
+      return;
+    }
   }
+
+
 
   erroLogin.innerText = "";
   loginBox.classList.add("oculto");
@@ -254,23 +286,33 @@ atualizarMenuTipoBusca();
   btnAjudaSuporte.classList.add("oculto");
 
 
-  document.getElementById("boxFiltros").classList.remove("oculto");
+  const boxFiltros = document.getElementById("boxFiltros");
+  if (boxFiltros) {
+    boxFiltros.classList.remove("oculto");
+  }
+
   campoBusca.disabled = false;
   btnTipoBusca.disabled = false;
   atualizarPlaceholderBusca();
 
 
-  boasVindas.innerHTML = `
-    ${saudacaoPorHorario()} <strong>${dadosVendedora[0][23]}</strong><br>
-    Abaixo, envios realizados nos últimos 6 meses.
-  `;
+  boasVindas.innerHTML = isAdmin
+    ? `${saudacaoPorHorario()} <strong>Administrador</strong><br>
+     Visualização completa de todos os envios.`
+    : `${saudacaoPorHorario()} <strong>${dadosVendedora[0][23]}</strong><br>
+     Abaixo, envios realizados nos últimos 6 meses.`;
+
 
   painelGrafico.classList.remove("oculto");
   resultado.classList.remove("oculto");
 
   /* ================= TEMA + LOGO ================= */
-  const marca = normalizar(dadosVendedora[0][24]);
+  const marca = isAdmin
+    ? "QUATROK" // ou "LUARA", escolha uma padrão
+    : normalizar(dadosVendedora[0][24]);
+
   window.marcaLogada = marca;
+
 
   document.body.classList.remove("tema-luara", "tema-quatrok");
 
@@ -364,6 +406,12 @@ btnNotificacoes.onclick = () => {
    overlayNotificacoes
     .querySelector(".painel-detalhes")
     .classList.add("modo-legenda");
+
+  const painelNotif = overlayNotificacoes?.querySelector(".painel-detalhes");
+
+  if (painelNotif) {
+    painelNotif.classList.add("modo-legenda");
+  }
 
   travarScroll();
 };
@@ -574,6 +622,9 @@ card.className = `card ${classeStatus}`;
     card.className = `card ${classeStatus}`;
 
     card.onclick = () => abrirDetalhes(grupo);
+    const codigoVendedorCard = l[22] || "-";
+    const nomeVendedorCard = l[23] || "-";
+
 
     card.innerHTML = `
     ${faixaHTML}
@@ -589,7 +640,14 @@ card.className = `card ${classeStatus}`;
       <strong>${labelPedido}:</strong> ${pedidosUnicos.join(" / ")}<br><br>
 
 
-      
+      ${window.isAdmin ? `
+  <div class="card-vendedor">
+    <strong>Vendedor:</strong>
+    ${codigoVendedorCard} - ${nomeVendedorCard}
+  </div>
+` : ""}
+
+
       <div class="cardcliente">
         ${window.exibirCliente ? `
         <strong>Cliente: </strong>${nomeCliente}<br>
@@ -944,7 +1002,11 @@ trocarVendedor.addEventListener("click", () => {
 
   sistema.classList.add("oculto");
   trocarVendedor.classList.add("oculto");
-  document.getElementById("boxFiltros").classList.add("oculto");
+  const boxFiltros = document.getElementById("boxFiltros");
+  if (boxFiltros) {
+    boxFiltros.classList.remove("oculto");
+  }
+
 
   btnNotificacoes.classList.add("oculto");
   contadorNotificacoes.innerText = "0";

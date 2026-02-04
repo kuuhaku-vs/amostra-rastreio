@@ -1057,16 +1057,8 @@
   }
 
   /* ALERTA – AGUARDANDO RETIRADA */
-  .alerta-retirada {
-    position: absolute;
-    top: 5px;
-    right: 50px;
-    font-size: 20px;
-    color: #ff1744;
-    font-weight: bold;
+  
 
-    animation: pulse-alerta 5.0s ease-in-out infinite;
-  }
   .card:hover .alerta-retirada {
     animation-play-state: paused;
   }
@@ -1277,36 +1269,43 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  overflow-y: auto; /* scroll vertical */
-  max-height: calc(80vh - 40px); /* altura disponível dentro do painel */
+  
+  width: 100%;
+  align-items: center;
 }
 
 
 
   /* cada notificação */
   .notificacao-item {
-    background: white;
-    border-radius: 14px;
-    padding: 16px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    cursor: pointer;
-    position: relative;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    margin-bottom: 10px;
-    max-width: 97%;
-  }
+  background: white;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 
  #overlayNotificacoes .painel-notificacoes {
   background: #fff;
   border-radius: 14px;
   width: 650px;
   max-height: 80vh;
+
   display: flex;
   flex-direction: column;
+  align-items: center; /* 🔥 ESSENCIAL */
+
   padding: 16px;
-  overflow: visible; /* ou remova essa linha */
-  
 }
+
 
 
   .notificacao-item:hover {
@@ -1371,16 +1370,18 @@
 
 /* ===== ALERTA DE RETIRADA (VERSÃO COMPACTA NA NOTIFICAÇÃO) ===== */
 .notificacao-item.alerta-retirada {
-  /* Mesma altura e padding das outras notificações */
-  padding: 17px;        /* igual ao .notificacao-item padrão */
-  font-size: 14px;      /* igual ao padrão */
-  line-height: 1.4;     /* mantém espaçamento de linha */
-  width: 99%;
-  color: red;       /* mantém a cor padrão do texto */
-  margin-bottom: 20px;
-  margin-left: 15px;
+  padding: 16px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #d50000;
+
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   border-radius: 14px;
 }
+
+
 
 /* Borda lateral vermelha mantida */
 .notificacao-item.alerta-retirada::before {
@@ -1512,14 +1513,5 @@
     font-size: 11px;
     
   }
-    .alerta-retirada {
-    position: absolute;
-    top: 5px;
-    right: 50px;
-    font-size: 20px;
-    color: #ff1744;
-    font-weight: bold;
-
-    animation: pulse-alerta 5.0s ease-in-out infinite;
-  }
+    
 }

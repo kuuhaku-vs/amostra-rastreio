@@ -558,7 +558,7 @@
   .painel-detalhes {
     background: #ffffff;
     width: 600px;
-    max-height: 550px;
+    max-height: 560px;
     border-radius: 18px;
     padding: 20px 20px 30px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
@@ -655,7 +655,7 @@
 
   /* Só ativa se tiver mais de 10 itens */
   .lista-itens.lista-scroll {
-    max-height: 180px;
+    max-height: 160px;
     /* altura visível */
     overflow-y: auto;
     padding-right: 6px;

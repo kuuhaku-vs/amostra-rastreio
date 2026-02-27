@@ -823,15 +823,15 @@ let iconeEnvioDetalhes = "";
 
 if (tipoEnvio.includes("SEDEX PAG")) {
   iconeEnvioDetalhes =
-    `<img src="Imagens/sedexcobrar.png" class="icone-envio-detalhes" alt="SEDEX PAG. ENTREGA">`;
+    `<img src="./Imagens/sedexcobrar.png" class="icone-envio-detalhes" alt="SEDEX PAG. ENTREGA">`;
 }
 else if (tipoEnvio.includes("SEDEX")) {
   iconeEnvioDetalhes =
-    `<img src="Imagens/sedex.png" class="icone-envio-detalhes" alt="SEDEX">`;
+    `<img src="./Imagens/sedex.png" class="icone-envio-detalhes" alt="SEDEX">`;
 }
 else if (tipoEnvio.includes("PAC")) {
   iconeEnvioDetalhes =
-    `<img src="Imagens/pac.png" class="icone-envio-detalhes" alt="PAC">`;
+    `<img src="./Imagens/pac.png" class="icone-envio-detalhes" alt="PAC">`;
 }
 
 
@@ -1060,6 +1060,7 @@ btnAjudaSuporte.addEventListener("click", () => {
 document.addEventListener("click", () => {
   menuAjuda.classList.add("oculto");
 });
+
 
 
 

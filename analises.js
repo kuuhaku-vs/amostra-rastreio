@@ -247,7 +247,7 @@ function carregarLogo() {
         }
 
         const img = new Image();
-        img.src = "/Imagens/4k BRANCO.png"; // 🔥 coloque aqui o caminho real da sua logo
+        img.src = "Imagens/4k BRANCO.png"; // 🔥 coloque aqui o caminho real da sua logo
 
         img.onload = function () {
             const canvas = document.createElement("canvas");
@@ -558,4 +558,5 @@ function aplicarFiltroValor() {
     }
 
     renderizarTabela(base);
+
 }

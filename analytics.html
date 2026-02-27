@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <link rel="icon" type="image/svg+xml"
+href="data:image/svg+xml;charset=UTF-8,
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+  <rect width='0' height='0' rx='20' fill='%23'/>
+  <text x='50%' y='100%' text-anchor='middle' font-size='100'>📈</text>
+</svg>">
+
+    <meta charset="UTF-8" />
+    <title>Analytics Amostra</title>
+    <link rel="stylesheet" href="analises.css" />
+</head>
+
+<body class="tema-quatrok">
+
+    <!-- MODAL DETALHES -->
+    <div id="modalDetalhes" class="modal">
+        <div class="modal-content">
+
+            <span class="close" onclick="fecharModal()">✕</span>
+
+            <h2>Detalhes do Envio</h2>
+
+            <div class="detalhes-grid">
+
+                <div class="campo">
+                    <span class="label">Nota Fiscal</span>
+                    <span id="detNota"></span>
+                </div>
+
+                <div class="campo">
+                    <span class="label">Pedido</span>
+                    <span id="detPedido"></span>
+                </div>
+
+                <div class="campo">
+                    <span class="label">Cliente</span>
+                    <span id="detCliente"></span>
+                </div>
+
+                <div class="campo">
+                    <span class="label">Representante</span>
+                    <span id="detRepresentante"></span>
+                </div>
+
+                <div class="campo">
+                    <span class="label">Cidade - UF</span>
+                    <span id="detLocalizacao"></span>
+                </div>
+
+                <div class="campo">
+                    <span class="label">Situação</span>
+                    <span id="detSituacao"></span>
+                </div>
+
+                <div class="campo">
+                    <span class="label">Postagem</span>
+                    <span id="detPostagem"></span>
+                </div>
+
+                <div class="campo">
+                    <span class="label">Prazo</span>
+                    <span id="detPrazo"></span>
+                </div>
+
+            </div>
+
+            <hr>
+
+            <h3>Amostras Enviadas</h3>
+            <ul id="detAmostras"></ul>
+
+        </div>
+    </div>
+
+    <!-- TOPO -->
+    <header class="topo-analises">
+        <div class="logo-area">
+            <img src="/Imagens/4k BRANCO.png" alt="Logo 4K">
+            <h1 class="titulo-sistema">Análise | Envio de Amostras</h1>
+        </div>
+
+        <div class="filtros-data">
+            <label>
+                Filtrar p/ Data:
+                <input type="date" id="dataInicio" onchange="filtrarPorData()">
+            </label>
+
+            <label>
+                Até
+                <input type="date" id="dataFim" onchange="filtrarPorData()">
+            </label>
+        </div>
+    </header>
+
+    <!-- CONTAINER PRINCIPAL -->
+    <div class="layout-principal">
+
+        <main class="conteudo-central">
+
+            <!-- CARDS KPI -->
+            <section class="resumo-cards2">
+                <div class="card2">
+                    <span>Pedidos enviados</span>
+                    <h2 id="totalRastreios">0</h2>
+                </div>
+
+                <div class="card2">
+                    <span>Custo de Envios</span>
+                    <h2 id="totalValor">R$ 0,00</h2>
+                </div>
+
+            </section>
+
+            <!-- CARD DA TABELA -->
+            <section class="card-container-tabela">
+
+<div class="topo-tabela">
+
+    <!-- 🔎 Filtro -->
+<div class="filtro-valor">
+    <span class="label-toggle">Acima de R$ 100,00</span>
+
+    <label class="switch">
+        <input type="checkbox" id="filtro100" onchange="aplicarFiltroValor()">
+        <span class="slider"></span>
+    </label>
+</div>
+
+    <!-- 📄 Botão PDF -->
+    <div id="btn-pdf">
+        <button class="btn-pdf" onclick="gerarPDFSelecionados()">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="18"
+                 height="18"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <span>PDF</span>
+        </button>
+    </div>
+
+</div>
+
+                <table class="tabela-analises">
+                    <thead>
+                        <tr>
+                            <!-- CHECKBOX SELECT ALL -->
+                            <th>
+                                <input type="checkbox" id="checkTodos" onclick="selecionarTodosFiltrados(this)">
+                            </th>
+                            <th>Rastreio</th>
+                            <th>Cliente</th>
+                            <th>Representante</th>
+                            <th>Vendedor</th>
+                            <th onclick="ordenarPorValor()" style="cursor:pointer">
+                             Valor <span id="iconeOrdenacao">↕</span>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaAnalises">
+                        <!-- linhas via JS -->
+                    </tbody>
+                </table>
+
+            </section>
+
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="analises.js"></script>
+
+</body>
+</html>

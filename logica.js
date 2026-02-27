@@ -551,15 +551,15 @@ grupos.sort((a, b) => {
 
 if (tipoEnvio.includes("SEDEX PAG")) {
   iconeEnvio =
-    `<img src="Imagens/sedexcobrar.png" class="icone-envio" alt="SEDEX PAG. ENTREGA">`;
+    `<img src="./Imagens/sedexcobrar.png" class="icone-envio" alt="SEDEX PAG. ENTREGA">`;
 }
 else if (tipoEnvio.includes("SEDEX")) {
   iconeEnvio =
-    `<img src="Imagens/sedex.png" class="icone-envio" alt="SEDEX">`;
+    `<img src="./Imagens/sedex.png" class="icone-envio" alt="SEDEX">`;
 }
 else if (tipoEnvio.includes("PAC")) {
   iconeEnvio =
-    `<img src="Imagens/pac.png" class="icone-envio" alt="PAC">`;
+    `<img src="./Imagens/pac.png" class="icone-envio" alt="PAC">`;
 }
 
 
@@ -1060,6 +1060,7 @@ btnAjudaSuporte.addEventListener("click", () => {
 document.addEventListener("click", () => {
   menuAjuda.classList.add("oculto");
 });
+
 
 
 

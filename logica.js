@@ -326,12 +326,12 @@ atualizarMenuTipoBusca();
 
 if (marca === "LUARA") {
   document.body.classList.add("tema-luara");
-  logoMarca.src = "/Imagens/luara branco.png";
-  logoMarcaBox.src = "/Imagens/luara branco.png";
+  logoMarca.src = "./Imagens/luara branco.png";
+  logoMarcaBox.src = "./Imagens/luara branco.png";
 } else {
   document.body.classList.add("tema-quatrok");
-  logoMarca.src = "/Imagens/4k BRANCO.png";
-  logoMarcaBox.src = "/Imagens/4k BRANCO.png";
+  logoMarca.src = "./Imagens/4k BRANCO.png";
+  logoMarcaBox.src = "./Imagens/4k BRANCO.png";
 }
 
 
@@ -1024,7 +1024,7 @@ trocarVendedor.addEventListener("click", () => {
   contadorNotificacoes.innerText = "0";
 
   document.body.classList.remove("tema-luara", "tema-quatrok");
-  logoMarca.src = "/Imagens/Logo - Grupo 4k - Branco.png";
+  logoMarca.src = "./Imagens/Logo - Grupo 4k - Branco.png";
 
   loginBox.classList.remove("oculto");
   codigoVendedor.focus();
@@ -1060,6 +1060,7 @@ btnAjudaSuporte.addEventListener("click", () => {
 document.addEventListener("click", () => {
   menuAjuda.classList.add("oculto");
 });
+
 
 
 

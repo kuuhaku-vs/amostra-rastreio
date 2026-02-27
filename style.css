@@ -79,18 +79,20 @@
   }
 
   /* ================= BOX BUSCA ================= */
-  .box-busca {
-    background: rgba(90, 26, 26, 0.18);
-    padding: 80px;
-    border-radius: 18px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, .3);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    min-width: 420px;
-    position: relative;
-    margin-top: -40px !important;
-  }
+    .box-busca {
+      background: rgba(90, 26, 26, 0.18);
+      padding: 50px 25px;
+      /* 👈 AQUI está a redução */
+      border-radius: 18px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, .3);
+  
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+  
+      min-width: 420px;
+      position: relative;
+    }
 
   /* LOGO DA MARCA DENTRO DO BOX-BUSCA */
   .logo-marca-box {
@@ -189,19 +191,19 @@
   }
 
   /* ================= BOTÃO TROCAR VENDEDOR ================= */
-  .trocar-vendedor {
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid white;
-    border-radius: 5px;
-    padding: 5px 12px;
-    font-size: 13px;
-    font-weight: bold;
-    cursor: pointer;
-    position: relative;
-    top: 60px;
-    left: 50px;
-    width:60%;
-  }
+    .trocar-vendedor {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid white;
+      border-radius: 5px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+  
+      width: 100%;
+      margin-top: auto;
+      /* empurra para o fundo do card */
+    }
 
   .trocar-vendedor:hover {
     background: #00000034;
@@ -1514,4 +1516,24 @@
     
   }
     
+}
+
+.hidden {
+  display: none;
+}
+
+.btn-analises {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  background: #ffffff;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-analises:hover {
+  background: #adadad73;
 }
